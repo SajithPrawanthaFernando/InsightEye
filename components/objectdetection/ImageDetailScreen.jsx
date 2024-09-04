@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
 import { db, storage } from "../../hooks/firebase"; // Ensure your Firebase setup is imported
 
 const ImageDetailScreen = () => {
@@ -36,14 +37,22 @@ const ImageDetailScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        <Text style={styles.title}>Image Details</Text>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        </View>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={handleEdit} style={styles.iconButton}>
+            <Ionicons name="create-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.iconButton}>
+            <Ionicons name="trash-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.objectName}>{item.objectName}</Text>
         <Text style={styles.description}>{item.description}</Text>
-        <TouchableOpacity onPress={handleEdit} style={styles.button}>
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleDelete} style={styles.button}>
-          <Text style={styles.buttonText}>Delete</Text>
+        <TouchableOpacity style={styles.micButton}>
+          <Ionicons name="mic" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -55,37 +64,71 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     paddingVertical: 10,
+    backgroundColor: "#f5f5f5",
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    padding: 16,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000080", // Dark blue color for title
+    marginBottom: 20,
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    backgroundColor: "#ccccff", // Light blue placeholder color
+    borderRadius: 10,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
-    width: 300,
-    height: 300,
-    marginBottom: 20,
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "50%",
+    marginVertical: 10,
+  },
+  iconButton: {
+    backgroundColor: "#000080", // Dark blue background for icons
+    padding: 10,
+    width: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    borderRadius: 50,
   },
   objectName: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    color: "#000080",
+    marginTop: 20,
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
+    color: "#000080",
     marginBottom: 20,
-    paddingHorizontal: 20,
     textAlign: "center",
   },
-  button: {
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
+  micButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#000080", // Dark blue background for the mic button
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
   },
 });
 

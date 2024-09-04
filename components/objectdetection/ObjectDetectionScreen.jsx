@@ -15,6 +15,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as Speech from "expo-speech";
 import { db, storage } from "../../hooks/firebase"; // Ensure your Firebase setup is imported
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Import GoogleGenerativeAI
+import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
 
 const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c"; // Replace with your Clarifai Personal Access Token
 const CLARIFAI_USER_ID = "obosl24w909z";
@@ -204,6 +205,7 @@ export default function ObjectDetectionScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Object Detection</Text>
       {permission && permission.granted ? (
         photoUri ? (
           navigation.navigate("ImageActions", {
@@ -232,6 +234,10 @@ export default function ObjectDetectionScreen() {
           <Button title="Grant Permission" onPress={requestPermission} />
         </View>
       )}
+
+      <TouchableOpacity style={styles.micButton}>
+        <Ionicons name="mic" size={24} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -241,7 +247,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#000080", // Dark blue color for title
+    marginBottom: 30,
+    marginTop: 40,
   },
   camera: {
     width: "100%",
@@ -257,7 +269,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     alignSelf: "flex-end",
-    backgroundColor: "#2196F3",
+    backgroundColor: "#000080",
     padding: 10,
     borderRadius: 5,
   },
@@ -295,5 +307,16 @@ const styles = StyleSheet.create({
   permissionText: {
     fontSize: 16,
     marginBottom: 20,
+  },
+  micButton: {
+    position: "absolute",
+    bottom: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#000080", // Dark blue background for the mic button
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 7,
   },
 });

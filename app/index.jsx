@@ -17,37 +17,38 @@ const App = () => {
       <Stack.Screen
         name="Home"
         component={MainScreen}
-        options={{ title: "Welcome to InsightEye!" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ title: "Explore!" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ObjectDetection"
         component={ObjectDetectionScreen}
-        options={{ title: "Object Detection" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ImageGallery"
         component={ImageGalleryScreen}
-        options={{ title: "Image Gallery" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ImageDetail"
         component={ImageDetailScreen}
-        options={{ title: "Image Detail" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="EditImage"
         component={EditImageScreen}
-        options={{ title: "Edit Image" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ImageActions"
-        component={ImageActionsScreen} // Add the ImageActionsScreen to the stack
-        options={{ title: "Image Actions" }} // Optionally, set the title
+        component={ImageActionsScreen}
+        options={{ title: "Object Detected" }}
+        // Add the ImageActionsScreen to the stack
       />
     </Stack.Navigator>
   );
