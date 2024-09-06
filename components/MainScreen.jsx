@@ -19,28 +19,28 @@ const MainScreen = () => {
 
       <View style={styles.gridContainer}>
         <TouchableOpacity style={styles.card} onPress={handleScheduleScreen}>
-          <Ionicons name="time-outline" size={40} color="white" />
+          <Ionicons name="time-outline" size={60} color="white" />
           <Text style={styles.cardText}>Schedule</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} onPress={handleHomeScreen}>
-          <Ionicons name="eye-outline" size={40} color="white" />
+          <Ionicons name="eye-outline" size={60} color="white" />
           <Text style={styles.cardText}>Object Detection</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} onPress={""}>
-          <Ionicons name="flask-outline" size={40} color="white" />
+          <Ionicons name="flask-outline" size={60} color="white" />
           <Text style={styles.cardText}>Science</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} onPress={""}>
-          <Ionicons name="calculator-outline" size={40} color="white" />
+          <Ionicons name="calculator-outline" size={60} color="white" />
           <Text style={styles.cardText}>Maths</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.micButton}>
-        <Ionicons name="mic" size={24} color="white" />
+        <Ionicons name="mic" size={50} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -68,13 +68,13 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   card: {
-    width: 120,
-    height: 120,
+    width: 170,
+    height: 170,
     backgroundColor: "#000080", // Card color
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -84,17 +84,18 @@ const styles = StyleSheet.create({
   },
   cardText: {
     color: "#ffffff",
-    fontSize: 14,
+    fontSize: 30,
     fontWeight: "bold",
     marginTop: 10, // Space between icon and text
+    textAlign: 'center',
   },
   micButton: {
     position: "absolute",
     bottom: 20,
-    width: 60,
-    height: 60,
+    width: 120,
+    height: 120,
     marginBottom: 20,
-    borderRadius: 30,
+    borderRadius: 100,
     backgroundColor: "#000080", // Dark blue background for the mic button
     justifyContent: "center",
     alignItems: "center",

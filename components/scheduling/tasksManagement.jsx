@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { db } from '../../hooks/firebase'; // Import Firestore DB connection
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 const TasksManagement = () => {
   const [tasks, setTasks] = useState([]);
@@ -39,7 +39,6 @@ const TasksManagement = () => {
     try {
       await deleteDoc(doc(db, 'tasks', taskId));
       setTasks(tasks.filter(task => task.id !== taskId));
-      Alert.alert('Success', 'Task deleted successfully!');
     } catch (error) {
       Alert.alert('Error', 'Failed to delete task. Please try again.');
       console.error('Error deleting task: ', error);
@@ -51,9 +50,20 @@ const TasksManagement = () => {
     navigation.navigate('EditTask', { taskId }); // Replace 'EditTask' with your edit screen name
   };
 
+  // Function to handle task completion
+  const handleCompleteTask = async (taskId) => {
+    try {
+      const taskDoc = doc(db, 'tasks', taskId);
+      await updateDoc(taskDoc, { status: 'completed' });
+      setTasks(tasks.map(task => task.id === taskId ? { ...task, status: 'completed' } : task));
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update task status. Please try again.');
+      console.error('Error updating task status: ', error);
+    }
+  };
+
   // Render each task item
   const renderItem = ({ item }) => (
-    console.log(item),
     <View style={styles.taskItem}>
       <Text style={styles.taskTitle}>{item.title}</Text>
       <Text style={styles.taskDes}>{item.description}</Text>
@@ -61,9 +71,17 @@ const TasksManagement = () => {
         <Text style={styles.dueText}>{item.dueDate} at {item.dueTime}</Text>
       </View>
       <View style={styles.taskActions}>
-        <TouchableOpacity onPress={() => handleEditTask(item.id)}>
-          <Text style={styles.editButton}>Edit</Text>
-        </TouchableOpacity>
+        {item.status === 'pending' && (
+          <TouchableOpacity onPress={() => handleCompleteTask(item.id)}>
+            <Text style={styles.completeButton}>Complete</Text>
+          </TouchableOpacity>
+        )}
+        {item.status !== 'completed' && (
+          <TouchableOpacity onPress={() => handleEditTask(item.id)}>
+            <Text style={styles.editButton}>Edit</Text>
+          </TouchableOpacity>
+        )}
+        
         <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
           <Text style={styles.deleteButton}>Delete</Text>
         </TouchableOpacity>
@@ -125,16 +143,17 @@ const styles = StyleSheet.create({
   },
   taskDes: {
     fontSize: 20,
+    fontWeight: 'bold',
   },
   taskActions: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 40,
+    gap: 10,
     marginTop: 30,
   },
   editButton: {
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingLeft: 30,
+    paddingRight: 30,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#000080',
@@ -154,13 +173,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderRadius: 8,
   },
+  completeButton: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#008000',
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    borderRadius: 8,
+  },
   dueInfoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
   },
   dueText: {
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

@@ -24,7 +24,7 @@ const ScheduleHome = () => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.micButton}>
-        <Ionicons name="mic" size={24} color="white" />
+        <Ionicons name="mic" size={50} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
   micButton: {
     position: "absolute",
     bottom: 20,
-    width: 60,
-    height: 60,
+    width: 120,
+    height: 120,
     marginBottom: 20,
-    borderRadius: 30,
+    borderRadius: 100,
     backgroundColor: "#000080", // Dark blue background for the mic button
     justifyContent: "center",
     alignItems: "center",
