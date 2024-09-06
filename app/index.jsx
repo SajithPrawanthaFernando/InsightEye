@@ -8,7 +8,13 @@ import ImageDetailScreen from "../components/objectdetection/ImageDetailScreen";
 import EditImageScreen from "../components/objectdetection/EditImageScreen";
 import ImageActionsScreen from "../components/objectdetection/ImageActionsScreen"; // Import the new ImageActionsScreen
 import MainScreen from "../components/MainScreen";
-
+import LoginScreen from './app/screens/LoginScreen';
+// Import your screen components
+import NoteScreen from './mathLesson/screens/noteScreen';
+import NoteInputScreen from './mathLesson/screens/noteInputModel';
+import ViewNoteScreen from './mathLesson/screens/ViewNoteScreen';
+import EditNoteScreen from './mathLesson/screens/EditNoteScreen';
+import StudentLessonScreen from './mathLesson/screens/StudentLessonScreen'; // Import StudentLessonScreen
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -50,7 +56,32 @@ const App = () => {
         options={{ title: "Object Detected" }}
         // Add the ImageActionsScreen to the stack
       />
-    </Stack.Navigator>
+       <Stack.Screen 
+       name="Login" 
+       component={LoginScreen} />
+        
+        <Stack.Screen 
+        name="StudentLessonScreen" 
+        component={StudentLessonScreen} />
+         
+         <Stack.Screen name="NoteScreen" component={NoteScreen}  options={{ title: '' }}/>
+         <Stack.Screen
+           name="NoteInput"
+           component={NoteInputScreen}
+           options={{ title: '' }}
+         />
+         <Stack.Screen
+           name="EditNoteScreen"
+           component={EditNoteScreen}
+           options={{ title: '' }}
+         />
+         <Stack.Screen
+           name="ViewNoteScreen"
+           component={ViewNoteScreen}
+           options={{ title: '' }}
+         />
+       </Stack.Navigator>
+ 
   );
 };
 
