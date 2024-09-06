@@ -9,13 +9,16 @@ const MainScreen = () => {
   const handleHomeScreen = () => {
     navigation.navigate("HomeScreen"); // Replace with your actual route name
   };
+  const handleScheduleScreen = () => {
+    navigation.navigate("ScheduleHome"); // Replace with your actual route name
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>InsightEye</Text>
 
       <View style={styles.gridContainer}>
-        <TouchableOpacity style={styles.card} onPress={""}>
+        <TouchableOpacity style={styles.card} onPress={handleScheduleScreen}>
           <Ionicons name="time-outline" size={40} color="white" />
           <Text style={styles.cardText}>Schedule</Text>
         </TouchableOpacity>

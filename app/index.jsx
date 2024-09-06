@@ -8,7 +8,10 @@ import ImageDetailScreen from "../components/objectdetection/ImageDetailScreen";
 import EditImageScreen from "../components/objectdetection/EditImageScreen";
 import ImageActionsScreen from "../components/objectdetection/ImageActionsScreen"; // Import the new ImageActionsScreen
 import MainScreen from "../components/MainScreen";
-
+import ScheduleHome from "../components/scheduling/scheduleHome"; // Import the ScheduleHome component
+import AddTasks from "../components/scheduling/addTasks"; // Import the AddTasks component
+import TasksManagement from "../components/scheduling/tasksManagement"; // Import the TasksManagement component
+import EditTask from "../components/scheduling/editTask.jsx"; // Import the EditTask component
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -49,6 +52,26 @@ const App = () => {
         component={ImageActionsScreen}
         options={{ title: "Object Detected" }}
         // Add the ImageActionsScreen to the stack
+      />
+      <Stack.Screen
+        name="ScheduleHome"
+        component={ScheduleHome}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddTasks"
+        component={AddTasks}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TasksManagement"
+        component={TasksManagement}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditTask"
+        component={EditTask}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
