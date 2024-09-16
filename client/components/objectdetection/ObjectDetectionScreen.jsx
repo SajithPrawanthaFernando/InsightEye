@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Button,
-  TextInput,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
-import * as Speech from "expo-speech";
-import { db, storage } from "../../hooks/firebase"; // Ensure your Firebase setup is imported
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Import GoogleGenerativeAI
-import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
+import { db, storage } from "../../hooks/firebase";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Ionicons } from "@expo/vector-icons";
 
-const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c"; // Replace with your Clarifai Personal Access Token
+const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c";
 const CLARIFAI_USER_ID = "obosl24w909z";
 const CLARIFAI_APP_ID = "my_app";
 const CLARIFAI_MODEL_ID = "general-image-detection";
 const CLARIFAI_MODEL_VERSION_ID = "1580bb1932594c93b7e2e04456af7c6f";
 
-const GEMINI_API_KEY = "AIzaSyCuyjc8dFcI7bbW-EpmZmggTRICLWmgqMI"; // Replace with your Gemini API Key
+const GEMINI_API_KEY = "AIzaSyCuyjc8dFcI7bbW-EpmZmggTRICLWmgqMI";
 
 export default function ObjectDetectionScreen() {
   const [facing, setFacing] = useState("back");
@@ -251,7 +241,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#000080", // Dark blue color for title
+    color: "#000080",
     marginBottom: 30,
     marginTop: 40,
   },
@@ -314,7 +304,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#000080", // Dark blue background for the mic button
+    backgroundColor: "#000080",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 7,

@@ -23,6 +23,11 @@ const ImageActionsScreen = () => {
   } = route.params;
   const [speaking, setSpeaking] = useState(false);
 
+  const handleImagePress = () => {
+    navigation.navigate("ObjectDetection");
+    setPhotoUri(null);
+  };
+
   const speakDescription = () => {
     if (geminiDescription) {
       Speech.speak(geminiDescription);
@@ -54,10 +59,7 @@ const ImageActionsScreen = () => {
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setPhotoUri(null)}
-            style={styles.button}
-          >
+          <TouchableOpacity onPress={handleImagePress} style={styles.button}>
             <Ionicons name="close-circle-outline" size={24} color="white" />
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
@@ -68,12 +70,15 @@ const ImageActionsScreen = () => {
           </TouchableOpacity>
 
           {speaking && (
-            <TouchableOpacity onPress={stopSpeaking} style={styles.button}>
+            <TouchableOpacity onPress={stopSpeaking} style={styles.stopButton}>
               <Ionicons name="stop-circle-outline" size={24} color="white" />
               <Text style={styles.buttonText}>Stop Speaking</Text>
             </TouchableOpacity>
           )}
         </View>
+        <TouchableOpacity style={styles.micButton}>
+          <Ionicons name="mic" size={24} color="white" />
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f5f5f5", // Light grey background
+    backgroundColor: "#f5f5f5",
   },
   container: {
     alignItems: "center",
@@ -95,23 +100,23 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 300,
-    borderRadius: 10, // Rounded corners
+    borderRadius: 10,
     marginBottom: 20,
-    borderColor: "#000080", // Dark blue border
+    borderColor: "#000080",
     borderWidth: 2,
   },
   objectName: {
-    fontSize: 22, // Larger font size
+    fontSize: 22,
     fontWeight: "bold",
-    color: "#000080", // Dark blue text color
+    color: "#000080",
     marginBottom: 10,
     textAlign: "center",
   },
   description: {
-    fontSize: 18, // Larger font size
+    fontSize: 18,
     marginBottom: 20,
     textAlign: "center",
-    color: "#333", // Dark grey text color
+    color: "#333",
     paddingHorizontal: 10,
   },
   buttonGroup: {
@@ -122,7 +127,17 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#000080", // Dark blue background
+    backgroundColor: "#000080",
+    padding: 12,
+    borderRadius: 8,
+    margin: 5,
+    justifyContent: "center",
+    width: "45%",
+  },
+  stopButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FF0000",
     padding: 12,
     borderRadius: 8,
     margin: 5,
@@ -133,6 +148,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     marginLeft: 8,
+  },
+  micButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#000080",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
   },
 });
 
