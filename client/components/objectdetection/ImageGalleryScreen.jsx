@@ -7,9 +7,10 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { db } from "../../hooks/firebase";
 import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech"; // For text-to-speech
 
 const ImageGalleryScreen = ({
   startRecording,
@@ -21,27 +22,64 @@ const ImageGalleryScreen = ({
 }) => {
   const [images, setImages] = useState([]);
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
+  const [welcomeMessage, setWelcomeMessage] = useState("");
   const navigation = useNavigation();
+  const route = useRoute();
 
+  // Fetch images when the screen is loaded
   useEffect(() => {
-    fetchImages();
-  }, []);
+    if (route.name === "ImageGallery") {
+      fetchImages();
+    }
 
+    return () => {
+      Speech.stop(); // Stop any ongoing speech when unmounting
+    };
+  }, [route.name]);
+
+  // Create and speak the welcome message
   useEffect(() => {
-    if (transcribedSpeech) {
+    if (images.length > 0) {
+      const message = `Welcome to the detected objects gallery. There are ${images.length} images. To select an image, say the image number.`;
+      setWelcomeMessage(message);
+      Speech.speak(message);
+    }
+  }, [images]);
+
+  // Handle voice input and image selection
+  useEffect(() => {
+    if (route.name === "ImageGallery" && transcribedSpeech) {
       setIsTranscriptionVisible(true);
 
-      // Hide transcription after 5 seconds
+      // Handle voice navigation based on the recognized number
+      const handleVoiceNavigation = () => {
+        const numberMatch = transcribedSpeech.match(/number (\d+)|(\d+)/i);
+        if (numberMatch) {
+          const imageNumber = parseInt(numberMatch[1] || numberMatch[2], 10);
+          if (imageNumber > 0 && imageNumber <= images.length) {
+            const selectedImage = images[imageNumber - 1];
+            navigation.navigate("ImageDetail", { item: selectedImage });
+          } else {
+            Speech.speak(
+              "Sorry, I didn't understand. Please say a valid image number."
+            );
+          }
+        }
+      };
+
+      handleVoiceNavigation();
+
+      // Clear transcription after processing
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
+        setTranscribedSpeech(""); // Reset transcription after use
       }, 3000);
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
-  }, [transcribedSpeech]);
+  }, [transcribedSpeech, images, route.name]);
 
+  // Fetch images from Firestore
   const fetchImages = async () => {
     try {
       const snapshot = await db.collection("objects").get();
@@ -55,6 +93,7 @@ const ImageGalleryScreen = ({
     }
   };
 
+  // Handle microphone press for voice interaction
   const handleMicPress = () => {
     if (isRecording) {
       stopRecording();
@@ -64,13 +103,15 @@ const ImageGalleryScreen = ({
     setIsTranscriptionVisible(true);
   };
 
+  // Navigate to image detail on image press
   const handleImagePress = (item) => {
     navigation.navigate("ImageDetail", { item });
   };
 
-  const renderGridItem = ({ item }) => (
+  const renderGridItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleImagePress(item)}>
       <Image source={{ uri: item.imageUrl }} style={styles.thumbnail} />
+      <Text style={styles.imageNumber}>{index + 1}</Text>
     </TouchableOpacity>
   );
 
@@ -127,6 +168,16 @@ const styles = StyleSheet.create({
     margin: 12,
     borderRadius: 8,
     backgroundColor: "#c0c0c0",
+  },
+  imageNumber: {
+    position: "absolute",
+    bottom: 5,
+    right: 10,
+    color: "white",
+    fontSize: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    padding: 2,
+    borderRadius: 5,
   },
   micButton: {
     position: "absolute",

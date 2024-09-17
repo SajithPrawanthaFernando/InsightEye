@@ -28,16 +28,59 @@ const ImageDetailScreen = ({
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
 
   useEffect(() => {
+    if (route.name === "ImageDetail") {
+      const welcomeMessage = `Welcome to the details of ${item.objectName}. To edit the image, say "edit." To delete the image, say "delete." To hear the description, say "speak description." To stop hearing the description, say "stop.`;
+      Speech.speak(welcomeMessage);
+    }
+
+    // Cleanup function to stop speech when navigating away
+    return () => {
+      Speech.stop();
+    };
+  }, [route.name, item.objectName]);
+
+  useEffect(() => {
     if (transcribedSpeech) {
       setIsTranscriptionVisible(true);
 
-      // Hide transcription after 5 seconds
+      const handleVoiceInteraction = () => {
+        const commandMatch = transcribedSpeech
+          .toLowerCase()
+          .match(/edit|delete|speak description|stop/i);
+        if (commandMatch) {
+          switch (commandMatch[0]) {
+            case "edit":
+              handleEdit();
+              break;
+            case "delete":
+              handleDelete();
+              break;
+            case "speak description":
+              speakDescription();
+              break;
+            case "stop":
+              stopSpeaking();
+              break;
+            default:
+              Speech.speak("Sorry, I didn't understand. Please try again.");
+              Speech.stop();
+              setTranscribedSpeech("");
+              break;
+          }
+        } else {
+          Speech.speak("Sorry, I didn't catch that command. Please try again.");
+          Speech.stop();
+          setTranscribedSpeech("");
+        }
+      };
+
+      handleVoiceInteraction();
+
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
-      }, 3000);
+        setTranscribedSpeech(""); // Clear transcription after processing
+      }, 5000); // Set to 5 seconds for better user experience
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
   }, [transcribedSpeech]);
@@ -228,7 +271,7 @@ const styles = StyleSheet.create({
   stopButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FF0000", // Red button for stop
+    backgroundColor: "#FF0000",
     padding: 12,
     borderRadius: 8,
     margin: 5,

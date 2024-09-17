@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech"; // For text-to-speech
 
 const HomeScreen = ({
   startRecording,
@@ -12,31 +13,52 @@ const HomeScreen = ({
   setTranscribedSpeech,
 }) => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
 
   useEffect(() => {
-    if (transcribedSpeech) {
-      setIsTranscriptionVisible(true);
+    if (route.name === "HomeScreen") {
+      const welcomeMessage =
+        "Welcome to Explore. For object detection, say test object. For image gallery, say image gallery.";
 
-      // Hide transcription after 5 seconds
+      Speech.speak(welcomeMessage);
+
+      return () => {
+        Speech.stop();
+        setTranscribedSpeech(""); // Clear when leaving
+      };
+    }
+  }, [route.name]);
+
+  useEffect(() => {
+    if (route.name === "HomeScreen" && transcribedSpeech) {
+      setIsTranscriptionVisible(true);
+      const handleNavigation = () => {
+        if (transcribedSpeech.includes("test object")) {
+          navigation.navigate("ObjectDetection");
+        } else if (transcribedSpeech.includes("image gallery")) {
+          navigation.navigate("ImageGallery");
+        } else {
+          Speech.speak("Sorry, I didn't understand. Please say it again.");
+          setTranscribedSpeech("");
+          Speech.stop();
+        }
+      };
+      handleNavigation();
+
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
-      }, 3000);
+        setTranscribedSpeech(""); // Clear after handling
+      }, 1000);
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
-  }, [transcribedSpeech]);
+    return () => {
+      Speech.stop();
+    };
+  }, [transcribedSpeech, route.name]);
 
-  const handleObjectDetectionPress = () => {
-    navigation.navigate("ObjectDetection");
-  };
-
-  const handleImageGalleryPress = () => {
-    navigation.navigate("ImageGallery");
-  };
-
+  // Handle microphone button press
   const handleMicPress = () => {
     if (isRecording) {
       stopRecording();
@@ -52,13 +74,16 @@ const HomeScreen = ({
 
       <TouchableOpacity
         style={styles.card}
-        onPress={handleObjectDetectionPress}
+        onPress={() => navigation.navigate("ObjectDetection")}
       >
         <Ionicons name="eye-outline" size={40} color="white" />
         <Text style={styles.cardTitle}>Object Detection</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card} onPress={handleImageGalleryPress}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => navigation.navigate("ImageGallery")}
+      >
         <Ionicons name="images-outline" size={40} color="white" />
         <Text style={styles.cardTitle}>Image Gallery</Text>
       </TouchableOpacity>

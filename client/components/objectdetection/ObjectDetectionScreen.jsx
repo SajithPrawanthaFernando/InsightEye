@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 import { db, storage } from "../../hooks/firebase";
@@ -8,16 +8,15 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { transcribeSpeech } from "../../functions/transcribeSpeech";
-
 import { recordSpeech } from "../../functions/recordSpeech";
 import useWebFocus from "../../hooks/useWebFocus";
+import * as Speech from "expo-speech"; // For text-to-speech
 
 const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c";
 const CLARIFAI_USER_ID = "obosl24w909z";
 const CLARIFAI_APP_ID = "my_app";
 const CLARIFAI_MODEL_ID = "general-image-detection";
 const CLARIFAI_MODEL_VERSION_ID = "1580bb1932594c93b7e2e04456af7c6f";
-
 const GEMINI_API_KEY = "AIzaSyCuyjc8dFcI7bbW-EpmZmggTRICLWmgqMI";
 
 export default function ObjectDetectionScreen() {
@@ -39,8 +38,23 @@ export default function ObjectDetectionScreen() {
   const isWebFocused = useWebFocus();
   const audioRecordingRef = useRef(new Audio.Recording());
   const webAudioPermissionsRef = useRef(null);
+  const route = useRoute();
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (route.name === "ObjectDetection") {
+      // Only execute if on Home screen
+      const welcomeMessage =
+        "Welcome to Object Detection Screen. To take a picture say, take a picture or capture photo";
+      Speech.speak(welcomeMessage);
+
+      return () => {
+        Speech.stop();
+        setTranscribedSpeech(""); // Clear speech when leaving
+      };
+    }
+  }, [route.name]);
 
   useEffect(() => {
     if (isWebFocused) {
@@ -76,6 +90,7 @@ export default function ObjectDetectionScreen() {
     try {
       const speechTranscript = await transcribeSpeech(audioRecordingRef);
       setTranscribedSpeech(speechTranscript || "");
+      handleVoiceCommands(speechTranscript);
     } catch (e) {
       console.error(e);
     } finally {
@@ -223,8 +238,8 @@ export default function ObjectDetectionScreen() {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Select the model
 
       const result = await model.generateContent(
-        `Describe these objects: ${objectNames}`
-      ); // Generate content
+        `Describe these objects: ${objectNames}` // Generate content
+      );
 
       if (result.response.text()) {
         const cleanDescription = result.response.text().replace(/[#*]/g, ""); // Remove # and * from the description
@@ -270,6 +285,27 @@ export default function ObjectDetectionScreen() {
     return await ref.getDownloadURL();
   };
 
+  const handleVoiceCommands = (transcription) => {
+    if (
+      transcription.includes("take a picture") ||
+      transcription.includes("capture photo")
+    ) {
+      takePicture();
+    } else if (transcription.includes("show photo")) {
+      if (photoUri) {
+        navigation.navigate("ImageActions", {
+          photoUri,
+          geminiDescription,
+          objectName,
+          saveToFirebase,
+          setPhotoUri,
+        });
+      } else {
+        alert("No photo taken yet.");
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Object Detection</Text>
@@ -283,15 +319,13 @@ export default function ObjectDetectionScreen() {
             setPhotoUri,
           })
         ) : (
-          <>
-            <CameraView style={styles.camera} type={facing} ref={setCameraRef}>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={takePicture}>
-                  <Text style={styles.buttonText}>Take Photo</Text>
-                </TouchableOpacity>
-              </View>
-            </CameraView>
-          </>
+          <CameraView style={styles.camera} type={facing} ref={setCameraRef}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={takePicture}>
+                <Text style={styles.buttonText}>Take Photo</Text>
+              </TouchableOpacity>
+            </View>
+          </CameraView>
         )
       ) : (
         <View style={styles.permissionContainer}>

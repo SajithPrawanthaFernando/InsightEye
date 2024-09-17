@@ -32,16 +32,61 @@ const ImageActionsScreen = ({
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
 
   useEffect(() => {
+    if (route.name === "ImageActions") {
+      const welcomeMessage =
+        "Welcome to the Image Actions Screen. You can say 'save to Firebase', 'cancel description', 'speak the description', or 'stop speaking'.";
+
+      Speech.speak(welcomeMessage);
+
+      return () => {
+        Speech.stop();
+        setTranscribedSpeech(""); // Clear when leaving
+      };
+    }
+  }, [route.name]);
+
+  useEffect(() => {
     if (transcribedSpeech) {
       setIsTranscriptionVisible(true);
 
-      // Hide transcription after 5 seconds
+      const handleVoiceInteraction = () => {
+        const commandMatch = transcribedSpeech
+          .toLowerCase()
+          .match(
+            /save to firebase|cancel description|speak the description|stop speaking/i
+          );
+        if (commandMatch) {
+          switch (commandMatch[0]) {
+            case "save to firebase":
+              saveToFirebase();
+              Speech.speak("Saving to Firebase.");
+              break;
+            case "cancel description":
+              Speech.speak("Description cancelled.");
+              handleImagePress();
+              break;
+            case "speak the description":
+              speakDescription();
+              break;
+            case "stop speaking":
+              stopSpeaking();
+              break;
+            default:
+              Speech.speak("Sorry, I didn't understand. Please try again.");
+              break;
+          }
+        } else {
+          Speech.speak("Sorry, I didn't catch that command. Please try again.");
+        }
+      };
+
+      handleVoiceInteraction();
+
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
-      }, 3000);
+        setTranscribedSpeech(""); // Clear transcription after processing
+      }, 5000); // Set to 5 seconds for better user experience
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
   }, [transcribedSpeech]);
@@ -64,6 +109,7 @@ const ImageActionsScreen = ({
     Speech.stop();
     setSpeaking(false);
   };
+
   const handleMicPress = () => {
     if (isRecording) {
       stopRecording();

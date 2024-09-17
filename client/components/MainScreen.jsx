@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech"; // For text-to-speech
 
 const MainScreen = ({
   startRecording,
@@ -13,25 +14,55 @@ const MainScreen = ({
 }) => {
   const navigation = useNavigation();
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
+  const route = useRoute();
 
   useEffect(() => {
-    if (transcribedSpeech) {
-      setIsTranscriptionVisible(true);
+    if (route.name === "Home") {
+      // Only execute if on Home screen
+      const welcomeMessage =
+        "Welcome to InsightEye. For scheduling, say schedule. For object detection, say object detection. For science learning, say science. For maths learning, say maths.";
+      Speech.speak(welcomeMessage);
 
-      // Hide transcription after 5 seconds
+      return () => {
+        Speech.stop();
+        setTranscribedSpeech(""); // Clear speech when leaving
+      };
+    }
+  }, [route.name]);
+
+  useEffect(() => {
+    if (route.name === "Home" && transcribedSpeech) {
+      // Only respond to speech if we are on the Home Screenn
+      setIsTranscriptionVisible(true);
+      const handleNavigation = () => {
+        if (transcribedSpeech.includes("schedule")) {
+          navigation.navigate("ScheduleScreen");
+        } else if (transcribedSpeech.includes("object detection")) {
+          setTranscribedSpeech("");
+          navigation.navigate("HomeScreen");
+        } else if (transcribedSpeech.includes("science")) {
+          navigation.navigate("ScienceScreen");
+        } else if (transcribedSpeech.includes("maths")) {
+          navigation.navigate("MathsScreen");
+        } else {
+          Speech.speak("Sorry, I didn't understand. Please say it again.");
+          Speech.stop();
+          setTranscribedSpeech("");
+        }
+      };
+      handleNavigation();
+
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
-      }, 3000);
+        setTranscribedSpeech(""); // Clear after handling
+      }, 1000);
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
-  }, [transcribedSpeech]);
-
-  const handleHomeScreen = () => {
-    navigation.navigate("HomeScreen");
-  };
+    return () => {
+      Speech.stop();
+    };
+  }, [transcribedSpeech, route.name]);
 
   const handleMicPress = () => {
     if (isRecording) {
@@ -47,25 +78,34 @@ const MainScreen = ({
       <Text style={styles.title}>InsightEye</Text>
 
       <View style={styles.gridContainer}>
-        <TouchableOpacity style={styles.card} onPress={""}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate("ScheduleScreen")}
+        >
           <Ionicons name="time-outline" size={40} color="white" />
           <Text style={styles.cardText}>Schedule</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card} onPress={handleHomeScreen}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate("HomeScreen")}
+        >
           <Ionicons name="eye-outline" size={40} color="white" />
           <Text style={styles.cardText}>Object Detection</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card} onPress={""}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate("ScienceScreen")}
+        >
           <Ionicons name="flask-outline" size={40} color="white" />
           <Text style={styles.cardText}>Science</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card} onPress={""}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate("MathsScreen")}
+        >
           <Ionicons name="calculator-outline" size={40} color="white" />
           <Text style={styles.cardText}>Maths</Text>
         </TouchableOpacity>
-
-        {/* Add more cards if needed */}
       </View>
 
       <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>

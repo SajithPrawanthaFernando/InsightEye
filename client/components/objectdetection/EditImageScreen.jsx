@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech";
 import { db } from "../../hooks/firebase";
 
 const EditImageScreen = ({
@@ -25,31 +26,82 @@ const EditImageScreen = ({
   const navigation = useNavigation();
   const route = useRoute();
   const { item } = route.params;
-
   const [objectName, setObjectName] = useState(item.objectName);
   const [description, setDescription] = useState(item.description);
   const [errors, setErrors] = useState({ objectName: "", description: "" });
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
+  const [editingField, setEditingField] = useState(""); // New state for tracking the field being edited
 
   useEffect(() => {
-    if (transcribedSpeech) {
+    const welcomeMessage =
+      "Welcome to the edit screen. You can change the object name and description. Say save to save, back to go back, edit name to edit the object name, or edit description to edit the description.";
+    Speech.speak(welcomeMessage);
+
+    return () => {
+      Speech.stop();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (transcribedSpeech && route.name === "EditImage") {
       setIsTranscriptionVisible(true);
 
-      // Hide transcription after 5 seconds
+      const handleVoiceInteraction = () => {
+        const commandMatch = transcribedSpeech
+          .toLowerCase()
+          .match(/edit name|edit description|save description|go back/i);
+
+        if (commandMatch) {
+          switch (commandMatch[0]) {
+            case "edit name":
+              setEditingField("objectName");
+              break;
+            case "edit description":
+              setEditingField("description");
+              break;
+            case "save description":
+              handleSave();
+              break;
+            case "go back":
+              navigation.goBack();
+              break;
+            default:
+              Speech.speak(
+                "Sorry, I didn't understand the command. Please try again."
+              );
+              break;
+          }
+        } else {
+          Speech.speak("Sorry, I didn't catch that. Please try again.");
+        }
+      };
+
+      handleVoiceInteraction();
+
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech("");
-      }, 3000);
+        setTranscribedSpeech(""); // Clear transcription after processing
+      }, 5000);
 
-      // Clear the timer if the component unmounts
       return () => clearTimeout(timer);
     }
-  }, [transcribedSpeech]);
+  }, [transcribedSpeech, route.name, navigation, setTranscribedSpeech]);
 
-  // Validate objectName to ensure no numbers are entered and required fields are filled
+  useEffect(() => {
+    if (transcribedSpeech && editingField) {
+      if (editingField === "objectName") {
+        setObjectName((prevName) => prevName + " " + transcribedSpeech);
+      } else if (editingField === "description") {
+        setDescription((prevDesc) => prevDesc + " " + transcribedSpeech);
+      }
+      setTranscribedSpeech(""); // Clear transcription after appending
+      setEditingField(""); // Reset editing field
+    }
+  }, [transcribedSpeech, editingField, setTranscribedSpeech]);
+
   const handleObjectNameChange = (text) => {
-    const containsNumber = /\d/; // Regular expression to check for numbers
-    const containsSpecialChar = /[^a-zA-Z0-9\s]/; // Regular expression to check for special characters
+    const containsNumber = /\d/;
+    const containsSpecialChar = /[^a-zA-Z0-9\s]/;
 
     if (containsNumber.test(text)) {
       setErrors((prevErrors) => ({
@@ -107,7 +159,6 @@ const EditImageScreen = ({
       }));
     }
 
-    // If there are still errors, prevent saving
     if (errors.objectName || errors.description) {
       Alert.alert("Validation Error", "Please fix the errors before saving.");
       return;
@@ -142,7 +193,6 @@ const EditImageScreen = ({
           placeholder="Object Name"
           placeholderTextColor="#000080"
         />
-        {/* Display validation error for objectName */}
         {errors.objectName ? (
           <Text style={styles.errorText}>{errors.objectName}</Text>
         ) : null}
@@ -156,7 +206,6 @@ const EditImageScreen = ({
           placeholderTextColor="#000080"
           multiline
         />
-        {/* Display validation error for description */}
         {errors.description ? (
           <Text style={styles.errorText}>{errors.description}</Text>
         ) : null}
