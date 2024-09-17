@@ -9,6 +9,7 @@ const MainScreen = ({
   transcribedSpeech,
   isRecording,
   isTranscribing,
+  setTranscribedSpeech,
 }) => {
   const navigation = useNavigation();
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
@@ -20,6 +21,7 @@ const MainScreen = ({
       // Hide transcription after 5 seconds
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
       }, 3000);
 
       // Clear the timer if the component unmounts
@@ -37,6 +39,7 @@ const MainScreen = ({
     } else {
       startRecording();
     }
+    setIsTranscriptionVisible(true);
   };
 
   return (
@@ -74,11 +77,9 @@ const MainScreen = ({
       </TouchableOpacity>
 
       {isTranscribing && <Text>Transcribing...</Text>}
-      {isTranscriptionVisible && !isTranscribing && (
+      {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
         <View style={styles.transcriptionContainer}>
-          <Text style={styles.transcriptionText}>
-            {transcribedSpeech || "Your transcribed text will be shown here"}
-          </Text>
+          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
         </View>
       )}
     </View>

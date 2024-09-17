@@ -9,6 +9,7 @@ const HomeScreen = ({
   transcribedSpeech,
   isRecording,
   isTranscribing,
+  setTranscribedSpeech,
 }) => {
   const navigation = useNavigation();
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
@@ -20,6 +21,7 @@ const HomeScreen = ({
       // Hide transcription after 5 seconds
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
       }, 3000);
 
       // Clear the timer if the component unmounts
@@ -41,6 +43,7 @@ const HomeScreen = ({
     } else {
       startRecording();
     }
+    setIsTranscriptionVisible(true);
   };
 
   return (

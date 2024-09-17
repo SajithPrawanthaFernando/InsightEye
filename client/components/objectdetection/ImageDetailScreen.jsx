@@ -19,6 +19,7 @@ const ImageDetailScreen = ({
   transcribedSpeech,
   isRecording,
   isTranscribing,
+  setTranscribedSpeech,
 }) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -33,6 +34,7 @@ const ImageDetailScreen = ({
       // Hide transcription after 5 seconds
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
       }, 3000);
 
       // Clear the timer if the component unmounts
@@ -63,6 +65,7 @@ const ImageDetailScreen = ({
     } else {
       startRecording();
     }
+    setIsTranscriptionVisible(true);
   };
 
   const speakDescription = () => {
@@ -125,11 +128,9 @@ const ImageDetailScreen = ({
         {isTranscribing && (
           <Text style={{ marginTop: 5 }}>Transcribing...</Text>
         )}
-        {isTranscriptionVisible && !isTranscribing && (
+        {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
           <View style={styles.transcriptionContainer}>
-            <Text style={styles.transcriptionText}>
-              {transcribedSpeech || "Your transcribed text will be shown here"}
-            </Text>
+            <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
           </View>
         )}
       </View>

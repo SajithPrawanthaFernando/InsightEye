@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
@@ -6,6 +6,11 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { db, storage } from "../../hooks/firebase";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Ionicons } from "@expo/vector-icons";
+import { Audio } from "expo-av";
+import { transcribeSpeech } from "../../functions/transcribeSpeech";
+
+import { recordSpeech } from "../../functions/recordSpeech";
+import useWebFocus from "../../hooks/useWebFocus";
 
 const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c";
 const CLARIFAI_USER_ID = "obosl24w909z";
@@ -27,8 +32,71 @@ export default function ObjectDetectionScreen() {
   const [objectName, setObjectName] = useState("");
   const [images, setImages] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
+  const [transcribedSpeech, setTranscribedSpeech] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const isWebFocused = useWebFocus();
+  const audioRecordingRef = useRef(new Audio.Recording());
+  const webAudioPermissionsRef = useRef(null);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (isWebFocused) {
+      const getMicAccess = async () => {
+        const permissions = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        webAudioPermissionsRef.current = permissions;
+      };
+      if (!webAudioPermissionsRef.current) getMicAccess();
+    } else {
+      if (webAudioPermissionsRef.current) {
+        webAudioPermissionsRef.current
+          .getTracks()
+          .forEach((track) => track.stop());
+        webAudioPermissionsRef.current = null;
+      }
+    }
+  }, [isWebFocused]);
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    await recordSpeech(
+      audioRecordingRef,
+      setIsRecording,
+      !!webAudioPermissionsRef.current
+    );
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    setIsTranscribing(true);
+    try {
+      const speechTranscript = await transcribeSpeech(audioRecordingRef);
+      setTranscribedSpeech(speechTranscript || "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsTranscribing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (transcribedSpeech) {
+      setIsTranscriptionVisible(true);
+
+      // Hide transcription after 5 seconds
+      const timer = setTimeout(() => {
+        setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
+      }, 3000);
+
+      // Clear the timer if the component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [transcribedSpeech]);
 
   useEffect(() => {
     if (permission === null) {
@@ -41,6 +109,15 @@ export default function ObjectDetectionScreen() {
 
     fetchImages();
   }, [permission]);
+
+  const handleMicPress = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+    setIsTranscriptionVisible(true);
+  };
 
   const fetchImages = async () => {
     try {
@@ -225,9 +302,22 @@ export default function ObjectDetectionScreen() {
         </View>
       )}
 
-      <TouchableOpacity style={styles.micButton}>
-        <Ionicons name="mic" size={24} color="white" />
+      <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
+        <Ionicons
+          name={isRecording ? "stop-circle" : "mic"}
+          size={24}
+          color="white"
+        />
       </TouchableOpacity>
+
+      {isTranscribing && (
+        <Text style={styles.transcribingText}>Transcribing...</Text>
+      )}
+      {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
+        <View style={styles.transcriptionContainer}>
+          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -243,11 +333,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000080",
     marginBottom: 30,
-    marginTop: 40,
+    marginTop: 30,
   },
   camera: {
     width: "100%",
-    height: "70%",
+    height: "68%",
   },
   buttonContainer: {
     flex: 1,
@@ -300,7 +390,7 @@ const styles = StyleSheet.create({
   },
   micButton: {
     position: "absolute",
-    bottom: 20,
+    bottom: 10,
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -308,5 +398,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 7,
+  },
+  transcribingText: {
+    marginTop: 5,
+    fontSize: 16,
+    color: "#000",
+  },
+  transcriptionContainer: {
+    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  transcriptionText: {
+    fontSize: 16,
+    color: "#000",
   },
 });

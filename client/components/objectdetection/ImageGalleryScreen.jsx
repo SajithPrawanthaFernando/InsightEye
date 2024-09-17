@@ -17,6 +17,7 @@ const ImageGalleryScreen = ({
   transcribedSpeech,
   isRecording,
   isTranscribing,
+  setTranscribedSpeech,
 }) => {
   const [images, setImages] = useState([]);
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
@@ -33,6 +34,7 @@ const ImageGalleryScreen = ({
       // Hide transcription after 5 seconds
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
       }, 3000);
 
       // Clear the timer if the component unmounts
@@ -59,6 +61,7 @@ const ImageGalleryScreen = ({
     } else {
       startRecording();
     }
+    setIsTranscriptionVisible(true);
   };
 
   const handleImagePress = (item) => {
@@ -93,11 +96,9 @@ const ImageGalleryScreen = ({
       {isTranscribing && (
         <Text style={styles.transcribingText}>Transcribing...</Text>
       )}
-      {isTranscriptionVisible && !isTranscribing && (
+      {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
         <View style={styles.transcriptionContainer}>
-          <Text style={styles.transcriptionText}>
-            {transcribedSpeech || "Your transcribed text will be shown here"}
-          </Text>
+          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
         </View>
       )}
     </View>

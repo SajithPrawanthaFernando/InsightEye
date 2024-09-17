@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -11,7 +11,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Speech from "expo-speech";
 import { Ionicons } from "@expo/vector-icons";
 
-const ImageActionsScreen = () => {
+const ImageActionsScreen = ({
+  startRecording,
+  stopRecording,
+  transcribedSpeech,
+  isRecording,
+  isTranscribing,
+  setTranscribedSpeech,
+}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const {
@@ -22,6 +29,22 @@ const ImageActionsScreen = () => {
     setPhotoUri,
   } = route.params;
   const [speaking, setSpeaking] = useState(false);
+  const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
+
+  useEffect(() => {
+    if (transcribedSpeech) {
+      setIsTranscriptionVisible(true);
+
+      // Hide transcription after 5 seconds
+      const timer = setTimeout(() => {
+        setIsTranscriptionVisible(false);
+        setTranscribedSpeech("");
+      }, 3000);
+
+      // Clear the timer if the component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [transcribedSpeech]);
 
   const handleImagePress = () => {
     navigation.navigate("ObjectDetection");
@@ -40,6 +63,14 @@ const ImageActionsScreen = () => {
   const stopSpeaking = () => {
     Speech.stop();
     setSpeaking(false);
+  };
+  const handleMicPress = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+    setIsTranscriptionVisible(true);
   };
 
   return (
@@ -76,9 +107,22 @@ const ImageActionsScreen = () => {
             </TouchableOpacity>
           )}
         </View>
-        <TouchableOpacity style={styles.micButton}>
-          <Ionicons name="mic" size={24} color="white" />
+        <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
+          <Ionicons
+            name={isRecording ? "stop-circle" : "mic"}
+            size={24}
+            color="white"
+          />
         </TouchableOpacity>
+
+        {isTranscribing && (
+          <Text style={styles.transcribingText}>Transcribing...</Text>
+        )}
+        {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
+          <View style={styles.transcriptionContainer}>
+            <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -157,6 +201,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
+  },
+  transcribingText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  transcriptionContainer: {
+    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  transcriptionText: {
+    fontSize: 16,
+    color: "#000",
   },
 });
 
