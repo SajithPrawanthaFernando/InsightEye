@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
-import { db, storage } from "../../hooks/firebase";
+import { db, storage, auth } from "../../hooks/firebase";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
@@ -254,10 +254,17 @@ export default function ObjectDetectionScreen() {
   };
 
   const saveToFirebase = async () => {
+    const user = auth.currentUser; // Get the currently logged-in user
+    if (!user) {
+      alert("User not logged in");
+      return;
+    }
+
     if (geminiDescription && photoUri) {
       try {
         const imageUrl = await uploadImageToFirebase(photoUri);
         await db.collection("objects").add({
+          userId: user.uid, // Save the user's ID
           description: geminiDescription,
           objectName: objectName,
           imageUrl: imageUrl,

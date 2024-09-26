@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { db } from "../../hooks/firebase";
+import { db, auth } from "../../hooks/firebase";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech"; // For text-to-speech
 
@@ -79,10 +79,17 @@ const ImageGalleryScreen = ({
     }
   }, [transcribedSpeech, images, route.name]);
 
-  // Fetch images from Firestore
+  // Fetch images from Firestore that belong to the current user
   const fetchImages = async () => {
     try {
-      const snapshot = await db.collection("objects").get();
+      // Replace `currentUserId` with the actual user ID, possibly from Firebase Auth
+      const currentUserId = auth.currentUser.uid; // Assuming you're using Firebase Authentication
+
+      const snapshot = await db
+        .collection("objects")
+        .where("userId", "==", currentUserId) // Fetch images where userId matches the current user
+        .get();
+
       const fetchedImages = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
