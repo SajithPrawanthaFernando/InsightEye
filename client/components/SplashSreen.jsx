@@ -1,54 +1,54 @@
 import { useNavigation } from "expo-router";
 import React, { useEffect } from "react";
-import { View, Text, Image, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Navigate to the main screen after 3 seconds
-      navigation.replace("login"); // Replace with your main screen's name
-    }, 3000); // Set to 3 seconds
+      // Navigate to the login screen after 3 seconds
+      navigation.replace("login");
+    }, 3000);
 
-    // Cleanup the timer when the component unmounts
     return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
     <View style={styles.container}>
+      <Ionicons
+        name="eye"
+        size={120}
+        color="#000080"
+        style={{ marginBottom: 20 }}
+      />
       <Text style={styles.appName}>InsightEye</Text>
       <Text style={styles.tagline}>
-        A Application for Visually{"\n"} Imapired Students
+        An Application for Visually{"\n"} Impaired Students
       </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: "cover", // Ensures the image covers the screen
-  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  logo: {
-    width: 176,
-    height: 158,
-    marginBottom: 20,
+    backgroundColor: "#fff", // White background
   },
   appName: {
-    fontSize: 36,
+    fontSize: 52,
     fontWeight: "bold",
-    color: "#1434A4", // Blue color for app name
+    color: "#000080", // Dark blue color for app name
+    marginBottom: 50,
   },
   tagline: {
-    fontSize: 18,
+    fontSize: 24,
     color: "#555",
-    alignItems: "center",
+    textAlign: "center",
+    lineHeight: 30,
   },
 });
 

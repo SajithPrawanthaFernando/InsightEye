@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,38 +6,80 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
-  Image,
 } from "react-native";
+import * as Speech from "expo-speech"; // For text-to-speech
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons"; // For the mic icon
 
 const LoginPage = ({
+  startRecording,
+  stopRecording,
+  transcribedSpeech,
+  isRecording,
+  isTranscribing,
+  setTranscribedSpeech,
   email,
   setEmail,
   password,
   setPassword,
   handleAuthentication,
-  setCurrentPage,
 }) => {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const navigation = useNavigation();
-
-  // State to handle error messages
   const [error, setError] = useState("");
+
+  // Voice instructions on page load
+  useEffect(() => {
+    const welcomeMessage =
+      "Welcome to InsightEye login. Please say 'email' followed by your email address, 'password' followed by your password, 'login' to proceed, or 'sign up' to create a new account.";
+    Speech.speak(welcomeMessage);
+    return () => {
+      Speech.stop(); // Stop speaking when the component unmounts
+    };
+  }, []);
+
+  // Handle voice input for email, password, login, and sign up
+  useEffect(() => {
+    if (transcribedSpeech) {
+      const speechLower = transcribedSpeech.toLowerCase();
+
+      if (speechLower.includes("email")) {
+        const emailInput = speechLower.replace("email", "").trim();
+        setEmail(emailInput);
+        Speech.speak("Your email has been entered.");
+      } else if (speechLower.includes("password")) {
+        const passwordInput = speechLower.replace("password", "").trim();
+        setPassword(passwordInput);
+        Speech.speak("Your password has been entered.");
+      } else if (speechLower.includes("login")) {
+        handleLogin(); // Trigger the login process
+      } else if (speechLower.includes("sign up")) {
+        navigation.navigate("signup"); // Navigate to sign-up page
+      } else {
+        Speech.speak(
+          "Please specify whether it's email, password, login, or sign up."
+        );
+        Speech.stop();
+      }
+      setTranscribedSpeech(""); // Clear after handling
+    }
+  }, [transcribedSpeech]);
 
   const validateInput = () => {
     if (!email || !password) {
       setError("Both fields are required.");
+      Speech.speak("Both fields are required.");
       return false;
     }
-    // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address.");
+      Speech.speak("Please enter a valid email address.");
       return false;
     }
-    // Password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
+      Speech.speak("Password must be at least 6 characters long.");
       return false;
     }
     setError("");
@@ -46,11 +88,19 @@ const LoginPage = ({
 
   const handleLogin = async () => {
     if (!validateInput()) return;
-
     if (typeof handleAuthentication === "function") {
-      await handleAuthentication(navigation, "login"); // Pass current page as 'login'
+      await handleAuthentication(navigation, "login");
+      Speech.speak("Login successful.");
     } else {
       console.error("handleAuthentication is not a function");
+    }
+  };
+
+  const handleMicPress = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
     }
   };
 
@@ -61,7 +111,6 @@ const LoginPage = ({
       <Text style={styles.logoText}>InsightEye</Text>
       <Text style={styles.subtitle}>Login</Text>
 
-      {/* Display error message if any */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.inputContainer}>
@@ -74,6 +123,7 @@ const LoginPage = ({
           autoCapitalize="none"
           placeholderTextColor="#9ca3af"
         />
+
         <Text style={styles.inputLabel}>Password</Text>
         <TextInput
           style={styles.input}
@@ -89,12 +139,27 @@ const LoginPage = ({
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
+      {/* Sign-Up Button */}
       <TouchableOpacity
-        style={styles.loginButton}
+        style={[
+          styles.loginButton,
+          { backgroundColor: "#000080", marginTop: 10 },
+        ]}
         onPress={() => navigation.navigate("signup")}
       >
         <Text style={styles.loginButtonText}>Sign Up</Text>
       </TouchableOpacity>
+
+      {/* Mic Button for Voice Input */}
+      <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
+        <Ionicons
+          name={isRecording ? "stop-circle" : "mic"}
+          size={50}
+          color={"white"}
+        />
+      </TouchableOpacity>
+
+      {isTranscribing && <Text>Transcribing...</Text>}
     </View>
   );
 };
@@ -119,11 +184,6 @@ const styles = StyleSheet.create({
     color: "#000",
     marginBottom: 20,
   },
-  description: {
-    fontSize: 16,
-    color: "#7d7d7d",
-    marginBottom: 40,
-  },
   inputContainer: {
     width: "100%",
   },
@@ -141,13 +201,6 @@ const styles = StyleSheet.create({
     borderColor: "#000080",
     borderWidth: 1,
   },
-  forgotPasswordText: {
-    color: "#4285F4",
-    textAlign: "right",
-    width: "100%",
-    marginBottom: 20,
-    fontWeight: "bold",
-  },
   loginButton: {
     width: "100%",
     height: 70,
@@ -162,14 +215,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  bottomContainer: {
-    marginTop: 20,
-  },
-  toggleText: {
-    color: "#adb5bd",
-  },
-  signUpText: {
-    color: "#4285F4",
+  micButton: {
+    backgroundColor: "#000080",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
   },
   errorText: {
     color: "red",

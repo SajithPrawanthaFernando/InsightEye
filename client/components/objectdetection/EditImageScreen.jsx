@@ -30,7 +30,7 @@ const EditImageScreen = ({
   const [description, setDescription] = useState(item.description);
   const [errors, setErrors] = useState({ objectName: "", description: "" });
   const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
-  const [editingField, setEditingField] = useState(""); // New state for tracking the field being edited
+  const [editingField, setEditingField] = useState("");
 
   useEffect(() => {
     const welcomeMessage =
@@ -55,9 +55,11 @@ const EditImageScreen = ({
           switch (commandMatch[0]) {
             case "edit name":
               setEditingField("objectName");
+              Speech.speak("Please say your new object name.");
               break;
             case "edit description":
               setEditingField("description");
+              Speech.speak("Please say your new description.");
               break;
             case "save description":
               handleSave();
@@ -71,8 +73,6 @@ const EditImageScreen = ({
               );
               break;
           }
-        } else {
-          Speech.speak("Sorry, I didn't catch that. Please try again.");
         }
       };
 
@@ -107,11 +107,6 @@ const EditImageScreen = ({
       setErrors((prevErrors) => ({
         ...prevErrors,
         objectName: "Object name cannot contain numbers.",
-      }));
-    } else if (containsSpecialChar.test(text)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        objectName: "Object name cannot contain special characters.",
       }));
     } else if (text === "") {
       setErrors((prevErrors) => ({

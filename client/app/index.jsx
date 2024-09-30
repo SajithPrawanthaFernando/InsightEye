@@ -183,6 +183,14 @@ const App = () => {
             password={password}
             setPassword={setPassword}
             handleAuthentication={handleAuthentication}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
           />
         )}
       </Stack.Screen>
@@ -195,6 +203,14 @@ const App = () => {
             password={password}
             setPassword={setPassword}
             handleAuthentication={handleAuthentication}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
           />
         )}
       </Stack.Screen>
