@@ -10,11 +10,11 @@ import ImageActionsScreen from "../components/objectdetection/ImageActionsScreen
 import MainScreen from "../components/MainScreen";
 import LoginScreen from './app/screens/LoginScreen';
 // Import your screen components
-import NoteScreen from './mathLesson/screens/noteScreen';
-import NoteInputScreen from './mathLesson/screens/noteInputModel';
-import ViewNoteScreen from './mathLesson/screens/ViewNoteScreen';
-import EditNoteScreen from './mathLesson/screens/EditNoteScreen';
-import StudentLessonScreen from './mathLesson/screens/StudentLessonScreen'; // Import StudentLessonScreen
+import NoteScreen from '../components/mathLesson/screens/noteScreen';
+import NoteInputScreen from '../components/mathLesson/screens/noteInputModel';
+import ViewNoteScreen from '../components/mathLesson/screens/ViewNoteScreen';
+import EditNoteScreen from '../components/mathLesson/screens/EditNoteScreen';
+import StudentLessonScreen from '../components/mathLesson/screens/StudentLessonScreen'; // Import StudentLessonScreen
 const Stack = createStackNavigator();
 
 const App = () => {
