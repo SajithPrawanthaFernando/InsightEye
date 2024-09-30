@@ -11,6 +11,9 @@ import * as Speech from "expo-speech"; // For text-to-speech
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; // For the mic icon
 
+const instructorEmail = "instructor@example.com"; // Hardcoded instructor email
+const instructorPassword = "instructor123"; // Hardcoded instructor password
+
 const LoginPage = ({
   startRecording,
   stopRecording,
@@ -28,7 +31,7 @@ const LoginPage = ({
   const navigation = useNavigation();
   const [error, setError] = useState("");
 
-  // Voice instructions on page load
+  // Voice instructions for normal users only, not instructors
   useEffect(() => {
     const welcomeMessage =
       "Welcome to InsightEye login. Please say 'email' followed by your email address, 'password' followed by your password, 'login' to proceed, or 'sign up' to create a new account.";
@@ -37,33 +40,6 @@ const LoginPage = ({
       Speech.stop(); // Stop speaking when the component unmounts
     };
   }, []);
-
-  // Handle voice input for email, password, login, and sign up
-  useEffect(() => {
-    if (transcribedSpeech) {
-      const speechLower = transcribedSpeech.toLowerCase();
-
-      if (speechLower.includes("email")) {
-        const emailInput = speechLower.replace("email", "").trim();
-        setEmail(emailInput);
-        Speech.speak("Your email has been entered.");
-      } else if (speechLower.includes("password")) {
-        const passwordInput = speechLower.replace("password", "").trim();
-        setPassword(passwordInput);
-        Speech.speak("Your password has been entered.");
-      } else if (speechLower.includes("login")) {
-        handleLogin(); // Trigger the login process
-      } else if (speechLower.includes("sign up")) {
-        navigation.navigate("signup"); // Navigate to sign-up page
-      } else {
-        Speech.speak(
-          "Please specify whether it's email, password, login, or sign up."
-        );
-        Speech.stop();
-      }
-      setTranscribedSpeech(""); // Clear after handling
-    }
-  }, [transcribedSpeech]);
 
   const validateInput = () => {
     if (!email || !password) {
@@ -88,6 +64,15 @@ const LoginPage = ({
 
   const handleLogin = async () => {
     if (!validateInput()) return;
+
+    // Instructor Login
+    if (email === instructorEmail && password === instructorPassword) {
+      Speech.speak("Instructor login successful.");
+      navigation.navigate("NoteScreen"); // Navigate to Lesson Screen for instructor
+      return;
+    }
+
+    // Normal user authentication (assuming you have a handleAuthentication function)
     if (typeof handleAuthentication === "function") {
       await handleAuthentication(navigation, "login");
       Speech.speak("Login successful.");
@@ -141,10 +126,7 @@ const LoginPage = ({
 
       {/* Sign-Up Button */}
       <TouchableOpacity
-        style={[
-          styles.loginButton,
-          { backgroundColor: "#000080", marginTop: 10 },
-        ]}
+        style={[styles.loginButton, { backgroundColor: "#000080", marginTop: 10 }]}
         onPress={() => navigation.navigate("signup")}
       >
         <Text style={styles.loginButtonText}>Sign Up</Text>
@@ -230,3 +212,4 @@ const styles = StyleSheet.create({
 });
 
 export default LoginPage;
+
