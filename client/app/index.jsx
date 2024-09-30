@@ -13,6 +13,12 @@ import Profile from "../components/Profile";
 import SignUpPage from "../components/SignUpPage";
 import { Audio } from "expo-av";
 import { transcribeSpeech } from "@/functions/transcribeSpeech";
+ // Ensure the correct path
+ import NoteScreen from '../components/mscreens/noteScreen';
+ import NoteInputScreen from '../components/mscreens/noteInputModel';
+ import ViewNoteScreen from '../components/mscreens/ViewNoteScreen';
+ import EditNoteScreen from '../components/mscreens/EditNoteScreen';
+ import StudentLessonScreen from '../components/mscreens/StudentLessonScreen'; // Ensure the correct path
 // Import Firebase configurations
 import { auth, db } from "../hooks/firebase";
 import {
@@ -316,7 +322,27 @@ const App = () => {
             setIsTranscribing={setIsTranscribing}
           />
         )}
+        
       </Stack.Screen>
+      <Stack.Screen name="StudentLessonScreen" component={StudentLessonScreen}options={{ title: '' }} />
+        
+        <Stack.Screen name="NoteScreen" component={NoteScreen}  options={{ title: '' }}/>
+        <Stack.Screen
+          name="NoteInput"
+          component={NoteInputScreen}
+          options={{ title: 'Add Lesson' }}
+        />
+        <Stack.Screen
+          name="EditNoteScreen"
+          component={EditNoteScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="ViewNoteScreen"
+          component={ViewNoteScreen}
+          options={{ title: '' }}
+        />
+     
     </Stack.Navigator>
   );
 };
