@@ -13,6 +13,9 @@ import Profile from "../components/Profile";
 import SignUpPage from "../components/SignUpPage";
 import { Audio } from "expo-av";
 import { transcribeSpeech } from "@/functions/transcribeSpeech";
+ // Ensure the correct path
+import NoteScreen from '../components/noteScreen'; // Ensure the correct path
+import NoteInputModal from '../components/noteInputModel'; // Ensure the correct path
 // Import Firebase configurations
 import { auth, db } from "../hooks/firebase";
 import {
@@ -316,7 +319,23 @@ const App = () => {
             setIsTranscribing={setIsTranscribing}
           />
         )}
+        
       </Stack.Screen>
+      <Stack.Screen
+            name="Note"
+            component={NoteScreen}
+            initialParams={{ user }}
+            options={{ headerShown: false }}
+          />
+          
+          <Stack.Screen
+          name="NoteInputModal"
+          component={NoteInputModal}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+     
     </Stack.Navigator>
   );
 };
