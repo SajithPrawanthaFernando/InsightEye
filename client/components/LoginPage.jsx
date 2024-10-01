@@ -11,7 +11,7 @@ import * as Speech from "expo-speech"; // For text-to-speech
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; // For the mic icon
 
-const instructorEmail = "instructor@example.com"; // Hardcoded instructor email
+const instructorEmail = "instructor@gmail.com"; // Hardcoded instructor email
 const instructorPassword = "instructor123"; // Hardcoded instructor password
 
 const LoginPage = ({

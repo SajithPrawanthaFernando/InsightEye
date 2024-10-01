@@ -115,7 +115,7 @@ const MainScreen = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("NoteScreen")}
+          onPress={() => navigation.navigate("StudentLessonScreen")}
         >
           <Ionicons name="calculator-outline" size={40} color="white" />
           <Text style={styles.cardText}>Maths</Text>
