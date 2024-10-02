@@ -33,7 +33,7 @@ const InstructorHome = () => {
           onPress={() => navigation.navigate("ObjectReport")}
         >
           <Ionicons name="eye-outline" size={40} color="white" />
-          <Text style={styles.cardText}>Object Detection</Text>
+          <Text style={styles.cardText}>Object Detection Report </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   cardText: {
     color: "#ffffff",
     fontSize: 14,
+    textAlign: "center",
     fontWeight: "bold",
     marginTop: 10,
   },

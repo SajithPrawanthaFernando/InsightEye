@@ -34,7 +34,7 @@ const EditImageScreen = ({
 
   useEffect(() => {
     const welcomeMessage =
-      "Welcome to the edit screen. You can change the object name and description. Say save to save, back to go back, edit name to edit the object name, or edit description to edit the description.";
+      "Welcome to the edit screen. You can change the object name and description. Say save description to save, back to go back, edit name to edit the object name, or edit description to edit the description.";
     Speech.speak(welcomeMessage);
 
     return () => {
