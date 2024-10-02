@@ -11,14 +11,33 @@ import SplashScreen from "../components/SplashSreen";
 import LoginPage from "../components/LoginPage";
 import Profile from "../components/Profile";
 import SignUpPage from "../components/SignUpPage";
+
+import MainHome from "../components/ScienceLearning/MainHome";
+import StudentHome from "../components/ScienceLearning/StudentHome";
+import InstructorHome from "../components/ScienceLearning/InstructorHome";
+import NotesOverview from "../components/ScienceLearning/NotesOverview";
+import FlashcardOverview from "../components/ScienceLearning/FlashcardOverview";
+import NoteDetail from "../components/ScienceLearning/NoteDetail";
+import NoteUpdate from "../components/ScienceLearning/NoteUpdate";
+import FlashcardGenerator from "../components/ScienceLearning/FlashcardGenerator";
+import NoteCreation from "../components/ScienceLearning/NoteCreation";
+import NoteList from "../components/ScienceLearning/NoteList";
+import FlashcardList from "../components/ScienceLearning/FlashcardList";
+import CardsDetail from "../components/ScienceLearning/CardsDetail";
+import FlashcardDetail from "../components/ScienceLearning/FlashcardDetail";
+
+import NoteScreen from "../components/mscreens/noteScreen";
+import NoteInputScreen from "../components/mscreens/noteInputModel";
+import ViewNoteScreen from "../components/mscreens/ViewNoteScreen";
+import EditNoteScreen from "../components/mscreens/EditNoteScreen";
+import StudentLessonScreen from "../components/mscreens/StudentLessonScreen"; // Ensure the correct path
+
+import InstructorHomee from "../components/Instructor/InstructorHome";
+
+import ObjectReport from "../components/Instructor/ObjectReport/ObjectReport";
+
 import { Audio } from "expo-av";
 import { transcribeSpeech } from "@/functions/transcribeSpeech";
- // Ensure the correct path
- import NoteScreen from '../components/mscreens/noteScreen';
- import NoteInputScreen from '../components/mscreens/noteInputModel';
- import ViewNoteScreen from '../components/mscreens/ViewNoteScreen';
- import EditNoteScreen from '../components/mscreens/EditNoteScreen';
- import StudentLessonScreen from '../components/mscreens/StudentLessonScreen'; // Ensure the correct path
 // Import Firebase configurations
 import { auth, db } from "../hooks/firebase";
 import {
@@ -76,9 +95,15 @@ const App = () => {
         if (currentPage === "login") {
           await signInWithEmailAndPassword(auth, email, password);
           console.log("User signed in successfully!");
-          navigation.navigate("Home");
-          setEmail("");
-          setPassword("");
+          if (email == "instructor@gmail.com" && password == "instructor123") {
+            navigation.navigate("InstructorHomee");
+            setEmail("");
+            setPassword("");
+          } else {
+            navigation.navigate("Home");
+            setEmail("");
+            setPassword("");
+          }
         } else if (currentPage === "signup") {
           const userCredential = await createUserWithEmailAndPassword(
             auth,
@@ -249,20 +274,7 @@ const App = () => {
         options={{ headerShown: false }}
         component={ObjectDetectionScreen}
       />
-      {/* {(props) => (
-          <ObjectDetectionScreen
-            {...props}
-            startRecording={startRecording}
-            stopRecording={stopRecording}
-            transcribedSpeech={transcribedSpeech}
-            isRecording={isRecording}
-            isTranscribing={isTranscribing}
-            setTranscribedSpeech={setTranscribedSpeech}
-            setIsRecording={setIsRecording}
-            setIsTranscribing={setIsTranscribing}
-          />
-        )}
-      </Stack.Screen> */}
+
       <Stack.Screen name="ImageGallery" options={{ headerShown: false }}>
         {(props) => (
           <ImageGalleryScreen
@@ -322,27 +334,311 @@ const App = () => {
             setIsTranscribing={setIsTranscribing}
           />
         )}
-        
       </Stack.Screen>
-      <Stack.Screen name="StudentLessonScreen" component={StudentLessonScreen}options={{ title: '' }} />
-        
-        <Stack.Screen name="NoteScreen" component={NoteScreen}  options={{ title: '' }}/>
-        <Stack.Screen
-          name="NoteInput"
-          component={NoteInputScreen}
-          options={{ title: 'Add Lesson' }}
-        />
-        <Stack.Screen
-          name="EditNoteScreen"
-          component={EditNoteScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="ViewNoteScreen"
-          component={ViewNoteScreen}
-          options={{ title: '' }}
-        />
-     
+      <Stack.Screen name="MainHome" options={{ headerShown: false }}>
+        {(props) => (
+          <MainHome
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="StudentHome" options={{ headerShown: false }}>
+        {(props) => (
+          <StudentHome
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="InstructorHome" options={{ headerShown: false }}>
+        {(props) => (
+          <InstructorHome
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NotesOverview" options={{ headerShown: false }}>
+        {(props) => (
+          <NotesOverview
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="FlashcardOverview" options={{ headerShown: false }}>
+        {(props) => (
+          <FlashcardOverview
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NoteDetail" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteDetail
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NoteUpdate" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteUpdate
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen name="FlashcardGenerator" options={{ headerShown: false }}>
+        {(props) => (
+          <FlashcardGenerator
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NoteCreation" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteCreation
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NoteList" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteList
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="FlashcardList" options={{ headerShown: false }}>
+        {(props) => (
+          <FlashcardList
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="CardsDetail" options={{ headerShown: false }}>
+        {(props) => (
+          <CardsDetail
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen name="FlashcardDetail" options={{ headerShown: false }}>
+        {(props) => (
+          <FlashcardDetail
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="StudentLessonScreen" options={{ headerShown: false }}>
+        {(props) => (
+          <StudentLessonScreen
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen name="NoteScreen" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteScreen
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NoteInput" options={{ title: "Add Lesson" }}>
+        {(props) => (
+          <NoteInputScreen
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="EditNoteScreen" options={{ headerShown: false }}>
+        {(props) => (
+          <EditNoteScreen
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="ViewNoteScreen" options={{ headerShown: false }}>
+        {(props) => (
+          <ViewNoteScreen
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="InstructorHomee" options={{ headerShown: false }}>
+        {(props) => (
+          <InstructorHomee
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen name="ObjectReport" options={{ headerShown: false }}>
+        {(props) => (
+          <ObjectReport
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };

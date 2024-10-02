@@ -1,82 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import * as Speech from "expo-speech"; // For text-to-speech
-import { auth } from "../hooks/firebase";
+import { auth } from "../../hooks/firebase";
 import { signOut } from "firebase/auth";
 
-const MainScreen = ({
-  startRecording,
-  stopRecording,
-  transcribedSpeech,
-  isRecording,
-  isTranscribing,
-  setTranscribedSpeech,
-}) => {
+const InstructorHome = () => {
   const navigation = useNavigation();
-  const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
-  const route = useRoute();
-
-  useEffect(() => {
-    if (route.name === "Home") {
-      // Only execute if on Home screen
-      const welcomeMessage =
-        "Welcome to InsightEye. For scheduling, say schedule. For object detection, say object detection. For science learning, say science. For maths learning, say maths. For logout, say logout";
-      Speech.speak(welcomeMessage);
-
-      return () => {
-        Speech.stop();
-        setTranscribedSpeech(""); // Clear speech when leaving
-      };
-    }
-  }, [route.name]);
-
-  useEffect(() => {
-    if (route.name === "Home" && transcribedSpeech) {
-      // Only respond to speech if we are on the Home Screenn
-      setIsTranscriptionVisible(true);
-      const handleNavigation = () => {
-        if (transcribedSpeech.includes("schedule")) {
-          navigation.navigate("ScheduleScreen");
-        } else if (transcribedSpeech.includes("object detection")) {
-          setTranscribedSpeech("");
-          navigation.navigate("HomeScreen");
-        } else if (transcribedSpeech.includes("science")) {
-          navigation.navigate("MainHome");
-        } else if (transcribedSpeech.includes("maths")) {
-          navigation.navigate("NoteScreen");
-        } else if (transcribedSpeech.includes("log out")) {
-          handleLogout();
-          navigation.navigate("login");
-        } else {
-          Speech.speak("Sorry, I didn't understand. Please say it again.");
-          Speech.stop();
-          setTranscribedSpeech("");
-        }
-      };
-      handleNavigation();
-
-      const timer = setTimeout(() => {
-        setIsTranscriptionVisible(false);
-        setTranscribedSpeech(""); // Clear after handling
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-    return () => {
-      Speech.stop();
-    };
-  }, [transcribedSpeech, route.name]);
-
-  const handleMicPress = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-    setIsTranscriptionVisible(true);
-  };
 
   const handleLogout = async () => {
     try {
@@ -86,10 +16,9 @@ const MainScreen = ({
       Alert.alert("Logout Error", error.message);
     }
   };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>InsightEye</Text>
+      <Text style={styles.title}>Instructor Page</Text>
 
       <View style={styles.gridContainer}>
         <TouchableOpacity
@@ -101,10 +30,10 @@ const MainScreen = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("HomeScreen")}
+          onPress={() => navigation.navigate("ObjectReport")}
         >
           <Ionicons name="eye-outline" size={40} color="white" />
-          <Text style={styles.cardText}>Object Detection</Text>
+          <Text style={styles.cardText}>Object Detection Report </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
@@ -126,21 +55,6 @@ const MainScreen = ({
           <Ionicons name="log-out-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
-        <Ionicons
-          name={isRecording ? "stop-circle" : "mic"}
-          size={24}
-          color="white"
-        />
-      </TouchableOpacity>
-
-      {isTranscribing && <Text>Transcribing...</Text>}
-      {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
-        <View style={styles.transcriptionContainer}>
-          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
-        </View>
-      )}
     </View>
   );
 };
@@ -206,6 +120,7 @@ const styles = StyleSheet.create({
   cardText: {
     color: "#ffffff",
     fontSize: 14,
+    textAlign: "center",
     fontWeight: "bold",
     marginTop: 10,
   },
@@ -237,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainScreen;
+export default InstructorHome;
