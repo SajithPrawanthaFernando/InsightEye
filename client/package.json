@@ -58,7 +58,7 @@
     "react-native-screens": "^3.31.1",
     "react-native-voice": "^0.3.0",
     "react-native-web": "~0.19.10",
-    "expo-print": "~13.0.1"
+    "react-native-view-shot": "3.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
