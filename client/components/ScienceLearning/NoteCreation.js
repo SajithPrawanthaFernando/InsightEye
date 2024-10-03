@@ -17,8 +17,17 @@ const NoteCreation = () => {
   const [description, setDescription] = useState("");
 
   const handleSubmit = async () => {
+    // Check if fields are empty
     if (!title.trim() || !description.trim()) {
       Alert.alert("Error", "All fields must be filled");
+      return;
+    }
+
+    // Validate that title and description are not only numbers
+    const isOnlyNumbers = (str) => /^\d+$/.test(str);
+
+    if (isOnlyNumbers(title) || isOnlyNumbers(description)) {
+      Alert.alert("Error", "Title and description cannot contain only numbers");
       return;
     }
 

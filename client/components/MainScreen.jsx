@@ -43,7 +43,7 @@ const MainScreen = ({
           setTranscribedSpeech("");
           navigation.navigate("HomeScreen");
         } else if (transcribedSpeech.includes("science")) {
-          navigation.navigate("MainHome");
+          navigation.navigate("StudentHome");
         } else if (transcribedSpeech.includes("maths")) {
           navigation.navigate("NoteScreen");
         } else if (transcribedSpeech.includes("log out")) {
@@ -108,7 +108,7 @@ const MainScreen = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("MainHome")}
+          onPress={() => navigation.navigate("StudentHome")}
         >
           <Ionicons name="flask-outline" size={40} color="white" />
           <Text style={styles.cardText}>Science</Text>

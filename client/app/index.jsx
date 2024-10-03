@@ -25,6 +25,7 @@ import NoteList from "../components/ScienceLearning/NoteList";
 import FlashcardList from "../components/ScienceLearning/FlashcardList";
 import CardsDetail from "../components/ScienceLearning/CardsDetail";
 import FlashcardDetail from "../components/ScienceLearning/FlashcardDetail";
+import NoteDescription from "../components/ScienceLearning/NoteDescription";
 
 import NoteScreen from "../components/mscreens/noteScreen";
 import NoteInputScreen from "../components/mscreens/noteInputModel";
@@ -532,6 +533,23 @@ const App = () => {
           />
         )}
       </Stack.Screen>
+
+      <Stack.Screen name="NoteDescription" options={{ headerShown: false }}>
+        {(props) => (
+          <NoteDescription
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
       <Stack.Screen name="StudentLessonScreen" options={{ headerShown: false }}>
         {(props) => (
           <StudentLessonScreen

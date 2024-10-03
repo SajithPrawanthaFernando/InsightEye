@@ -51,7 +51,7 @@ export const transcribeSpeech = async (audioRecordingRef) => {
 
       if (recordingUri && dataUrl) {
         const rootOrigin = Device.isDevice
-          ? "192.168.8.131" // Replace with your computer's IP address
+          ? "192.168.1.3" // Replace with your computer's IP address
           : Platform.OS === "android"
           ? "10.0.2.2" // For Android emulator to access localhost
           : "localhost";

@@ -53,7 +53,7 @@ const NoteDetail = () => {
             const docRef = doc(db, "sciencenotes", noteId);
             await deleteDoc(docRef);
             Alert.alert("Success", "Note deleted successfully", [
-              { text: "OK", onPress: () => navigation.back() },
+              { text: "OK", onPress: () => navigation.goBack() },
             ]);
           } catch (error) {
             Alert.alert("Error", "Failed to delete note");
