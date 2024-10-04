@@ -75,6 +75,7 @@ const SignUpPage = ({
   const validateInput = () => {
     if (!name || !email || !password) {
       setError("All fields are required.");
+      Speech.speak("Both fields are required.");
       return false;
     }
 
@@ -82,9 +83,19 @@ const SignUpPage = ({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address.");
+      Speech.speak("Please enter a valid email address.");
       return false;
     }
-
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      Speech.speak("Please enter a valid email address.");
+      return false;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      Speech.speak("Password must be at least 6 characters long.");
+      return false;
+    }
     setError("");
     return true;
   };

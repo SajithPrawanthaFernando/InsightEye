@@ -40,7 +40,15 @@ const ImageGalleryScreen = ({
   // Create and speak the welcome message
   useEffect(() => {
     if (images.length > 0) {
-      const message = `Welcome to the detected objects gallery. There are ${images.length} images. To select an image, say the image number.`;
+      // Construct the base welcome message
+      let message = `Welcome to the detected objects gallery. There are ${images.length} images. To select an image, say the image number.`;
+
+      // Add image descriptions
+      images.forEach((image, index) => {
+        const imageDescription = image.objectName || `Image ${index + 1}`; // Assuming images have a 'description' field
+        message += ` Image ${index + 1} is ${imageDescription}.`;
+      });
+
       setWelcomeMessage(message);
       Speech.speak(message);
     }
@@ -59,6 +67,8 @@ const ImageGalleryScreen = ({
           if (imageNumber > 0 && imageNumber <= images.length) {
             const selectedImage = images[imageNumber - 1];
             navigation.navigate("ImageDetail", { item: selectedImage });
+          } else if (transcribedSpeech.includes("go back")) {
+            navigation.navigate("HomeScreen");
           } else {
             Speech.speak(
               "Sorry, I didn't understand. Please say a valid image number."

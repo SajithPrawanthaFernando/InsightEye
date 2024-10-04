@@ -19,7 +19,7 @@ const HomeScreen = ({
   useEffect(() => {
     if (route.name === "HomeScreen") {
       const welcomeMessage =
-        "Welcome to Explore. For object detection, say test object. For image gallery, say image gallery.";
+        "Welcome to Explore. For object detection, say test object. For image gallery, say image gallery. For going back , say go back";
 
       Speech.speak(welcomeMessage);
 
@@ -38,6 +38,8 @@ const HomeScreen = ({
           navigation.navigate("ObjectDetection");
         } else if (transcribedSpeech.includes("image gallery")) {
           navigation.navigate("ImageGallery");
+        } else if (transcribedSpeech.includes("go back")) {
+          navigation.navigate("Home");
         } else {
           Speech.speak("Sorry, I didn't understand. Please say it again.");
           setTranscribedSpeech("");
