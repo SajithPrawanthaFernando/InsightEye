@@ -148,7 +148,6 @@ const MainScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 80,
     alignItems: "center",
     paddingLeft: 16,
     paddingRight: 16,
@@ -156,6 +155,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
+    marginTop: 80,
     fontWeight: "bold",
     color: "#000080",
   },

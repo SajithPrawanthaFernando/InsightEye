@@ -42,11 +42,10 @@ const NotesOverview = ({
   useEffect(() => {
     if (notes.length > 0) {
       // Generate a list of note titles
-      const noteTitles = notes.map(note => note.title).join(', ');
+      const noteTitles = notes.map((note) => note.title).join(", ");
 
       // Create a dynamic welcome message with note titles
-      const welcomeMessage = 
-      `Welcome to Notes Overview. To access a note, say the note title. 
+      const welcomeMessage = `Welcome to Notes Overview. To access a note, say the note title. 
       Available notes are: ${noteTitles}. 
       To read aloud a note, say "read" followed by the note title. 
       To stop reading, say "stop." Tap the mic button to begin speaking.`;
@@ -60,7 +59,6 @@ const NotesOverview = ({
     }
   }, [notes]);
 
-
   // Handle voice commands based on transcribed speech
   useEffect(() => {
     if (transcribedSpeech) {
@@ -68,7 +66,7 @@ const NotesOverview = ({
 
       const handleVoiceCommand = () => {
         const transcribedLower = transcribedSpeech.toLowerCase();
-        
+
         // Handle "stop" command to stop reading
         if (transcribedLower.includes("stop")) {
           Speech.stop();
@@ -81,10 +79,10 @@ const NotesOverview = ({
         const matchedNote = notes.find((note) =>
           transcribedLower.includes(note.title.toLowerCase())
         );
-      
+
         // Check if the command is to read the note
         const isReadCommand = transcribedLower.includes("read");
-      
+
         if (matchedNote) {
           // If "read" command is detected, read the note aloud
           if (isReadCommand) {
@@ -101,7 +99,7 @@ const NotesOverview = ({
 
         // Clear the transcribed speech after handling the command
         setTranscribedSpeech("");
-      };      
+      };
 
       handleVoiceCommand();
 
@@ -182,7 +180,9 @@ const NotesOverview = ({
       </View>
 
       {/* Show transcription if available */}
-      {isTranscribing && <Text>Transcribing...</Text>}
+      {isTranscribing && (
+        <Text style={{ textAlign: "center" }}>Transcribing...</Text>
+      )}
       {isTranscriptionVisible && !isTranscribing && transcribedSpeech && (
         <View style={styles.transcriptionContainer}>
           <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
@@ -196,7 +196,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: "#f5f5f5" },
   title: {
     fontSize: 32,
-    marginBottom: 16,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 30,
     textAlign: "center",
     color: "#000080",
   },

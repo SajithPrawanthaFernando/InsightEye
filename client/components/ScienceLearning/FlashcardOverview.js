@@ -48,8 +48,10 @@ const FlashcardOverview = ({
   // Welcome message for Flashcard Overview
   useEffect(() => {
     if (flashcards.length > 0) {
-      const flashcardTitles = flashcards.map((flashcard) => flashcard.title).join(", ");
-      
+      const flashcardTitles = flashcards
+        .map((flashcard) => flashcard.title)
+        .join(", ");
+
       const welcomeMessage = `
         Welcome to Flashcard List. Available flashcards are: ${flashcardTitles}.
         To access a flashcard, say the flashcard title. Tap the mic button to begin speaking.
@@ -111,7 +113,9 @@ const FlashcardOverview = ({
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#000080" style={styles.loader} />;
+    return (
+      <ActivityIndicator size="large" color="#000080" style={styles.loader} />
+    );
   }
 
   return (
@@ -161,13 +165,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginTop: 30,
+    marginBottom: 30,
     textAlign: "center",
     color: "#000080",
   },
   flashcardItem: {
     backgroundColor: "#ffffff",
-    padding: 16,
+    padding: 20,
     borderRadius: 10,
     marginBottom: 8,
     elevation: 1,
@@ -178,9 +183,9 @@ const styles = StyleSheet.create({
     color: "#000080",
   },
   micWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
-    left: '50%',
+    left: "50%",
     transform: [{ translateX: -30 }], // Centers the button horizontally
   },
   micButton: {

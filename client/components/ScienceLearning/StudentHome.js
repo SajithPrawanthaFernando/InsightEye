@@ -74,21 +74,23 @@ const StudentHome = ({
       <Text style={styles.title}>Science Learning</Text>
 
       <TouchableOpacity
-        style={styles.button}
+        style={styles.card}
         onPress={() => {
           navigation.push("NotesOverview");
         }}
       >
-        <Text style={styles.buttonText}>Access Notes</Text>
+        <Ionicons name="list-outline" size={40} color="white" />
+        <Text style={styles.cardTitle}>Access Notes</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.button}
+        style={styles.card}
         onPress={() => {
           navigation.push("FlashcardOverview");
         }}
       >
-        <Text style={styles.buttonText}>Access Flashcards</Text>
+        <Ionicons name="book-outline" size={40} color="white" />
+        <Text style={styles.cardTitle}>Access Flashcards</Text>
       </TouchableOpacity>
 
       {/* Add the mic button for voice commands */}
@@ -114,14 +116,14 @@ const StudentHome = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginTop: 80,
+    marginBottom: 100,
     color: "#000080",
   },
   button: {
@@ -161,6 +163,27 @@ const styles = StyleSheet.create({
   transcriptionText: {
     fontSize: 16,
     color: "#000",
+  },
+  card: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "#000080",
+    borderRadius: 10,
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  cardTitle: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
   },
 });
 
