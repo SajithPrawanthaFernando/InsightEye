@@ -37,7 +37,7 @@ const InstructorHome = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("InstructorHome")}
+          onPress={() => navigation.navigate("MainHome")}
         >
           <Ionicons name="flask-outline" size={40} color="white" />
           <Text style={styles.cardText}>Science</Text>

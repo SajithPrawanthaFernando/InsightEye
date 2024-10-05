@@ -169,32 +169,22 @@ const NoteScreen = ({
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>Math Lesson</Text>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>
-        <Icon name="plus" size={24} color="#fff" />
-      </TouchableOpacity>
+
       <FlatList
         data={notes}
         renderItem={renderNote}
         keyExtractor={(item) => item._id}
       />
-      <View style={styles.buttonWrapper}>
-        <Button title="Generate Report" onPress={generatePDF} color="#000080" />
-      </View>
-
-      {/* Mic Button */}
-      <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
-        <Icon
-          name={isRecording ? "stop-circle" : "microphone"}
-          size={24}
-          color="white"
-        />
+      <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>
+        <Icon name="plus" size={24} color="#fff" />
       </TouchableOpacity>
-
-      {isTranscriptionVisible && transcribedSpeech && (
-        <View style={styles.transcriptionContainer}>
-          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
-        </View>
-      )}
+      <TouchableOpacity
+        style={styles.buttonWrapper}
+        onPress={generatePDF}
+        color="#000080"
+      >
+        <Text style={styles.bttext}>Generate Report</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -207,17 +197,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   greeting: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    marginTop: 0,
+    marginTop: 20,
+    marginBottom: 30,
     textAlign: "center",
     color: "#000080",
   },
   addButton: {
     backgroundColor: "#000080",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-end",
@@ -248,6 +239,9 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginVertical: 20,
+    backgroundColor: "#000080",
+    padding: 15,
+    borderRadius: 10,
   },
   micButton: {
     position: "absolute",
@@ -269,6 +263,11 @@ const styles = StyleSheet.create({
   transcriptionText: {
     fontSize: 16,
     color: "#000",
+  },
+  bttext: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    textAlign: "center",
   },
 });
 

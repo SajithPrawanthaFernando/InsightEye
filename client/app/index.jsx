@@ -581,7 +581,7 @@ const App = () => {
           />
         )}
       </Stack.Screen>
-      <Stack.Screen name="NoteInput" options={{ title: "Add Lesson" }}>
+      <Stack.Screen name="NoteInput" options={{ headerShown: false }}>
         {(props) => (
           <NoteInputScreen
             {...props}

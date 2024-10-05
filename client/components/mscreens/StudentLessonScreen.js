@@ -1,126 +1,139 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Audio } from "expo-av"; // Importing Audio for recording
 import * as Speech from "expo-speech"; // For text-to-speech
+import { collection, getDocs } from "firebase/firestore"; // For fetching data from Firestore
+import { db } from "../../hooks/firebase"; // Firebase configuration
 
-const lessons = [
-  { id: 1, title: "Lesson 1: Introduction to Math", content: "In this lesson, we will cover the basics of addition, subtraction, multiplication, and division." },
-  { id: 2, title: "Lesson 2: Advanced Algebra", content: "In this lesson, we will explore polynomial equations." },
-  { id: 3, title: "Lesson 3: Geometry Basics", content: "In this lesson, we will learn about shapes and angles." },
-];
+const StudentLessonScreen = (props) => {
+  const [notes, setNotes] = useState([]);
+  const [activeNote, setActiveNote] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const {
+    startRecording,
+    stopRecording,
+    transcribedSpeech,
+    isTranscribing,
+    setTranscribedSpeech,
+    isRecording,
+  } = props;
 
-const StudentLessonScreen = () => {
-  const navigation = useNavigation();
-  const [activeLesson, setActiveLesson] = useState(null);
-  const [recording, setRecording] = useState(null);
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [transcribedSpeech, setTranscribedSpeech] = useState("");
-  const [isTranscriptionVisible, setIsTranscriptionVisible] = useState(false);
-
+  // Fetch notes from Firestore
   useEffect(() => {
-    const welcomeMessage = "Welcome to your lessons. Please say 'Lesson 1', 'Lesson 2', or 'Lesson 3' to begin.";
-    Speech.speak(welcomeMessage);
+    const fetchNotes = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "notes"));
+        const fetchedNotes = [];
+        querySnapshot.forEach((doc) => {
+          fetchedNotes.push({ id: doc.id, ...doc.data() });
+        });
+        setNotes(fetchedNotes);
+      } catch (error) {
+        console.error("Error fetching notes: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotes();
   }, []);
 
-  const startRecording = async () => {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+  // Play welcome message when the screen is loaded
+  useEffect(() => {
+    if (!loading) {
+      Speech.speak(
+        "Welcome to your maths lesson screen. You can say Lesson 1, Lesson 2, or similar commands to navigate."
       );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
     }
-  };
+  }, [loading]);
 
-  const stopRecording = async () => {
-    console.log("Stopping recording..");
-    setIsTranscribing(true);
-    await recording.stopAndUnloadAsync();
-    const uri = recording.getURI(); // Get the URI of the recorded audio
-    console.log("Recording stopped and stored at", uri);
+  // Handle voice commands after transcribing speech
+  useEffect(() => {
+    if (transcribedSpeech) {
+      handleVoiceCommand(transcribedSpeech);
+    }
+  }, [transcribedSpeech]);
 
-    // Send the recording for transcription
-    await sendRecordingForTranscription(uri);
-  };
+  // Handle voice command navigation
+  const handleVoiceCommand = (command) => {
+    const lessonNumber = command.match(/\d+/); // Extract the lesson number from the command
+    if (lessonNumber) {
+      const selectedNote = notes[parseInt(lessonNumber[0]) - 1]; // Find the corresponding note
+      if (selectedNote) {
+        setActiveNote(selectedNote); // Set the active note
+        Speech.speak(
+          `You have selected ${selectedNote.title}. Now starting the lesson.`
+        );
 
-  const sendRecordingForTranscription = async (uri) => {
-    try {
-      const response = await fetch('YOUR_TRANSCRIPTION_API_ENDPOINT', {
-        method: 'POST',
-        body: JSON.stringify({
-          audio: uri,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const result = await response.json();
-      if (result.transcript) {
-        setTranscribedSpeech(result.transcript);
+        // Speak the lesson content
+        Speech.speak(`${selectedNote.title}. ${selectedNote.content}`);
+        setTranscribedSpeech(""); // Clear the transcription after navigating
       } else {
-        console.error("No transcript found", result);
+        Speech.speak("Sorry, I couldn't find that lesson.");
       }
-    } catch (error) {
-      console.error("Error sending audio for transcription", error);
-    } finally {
-      setIsTranscribing(false);
-      setIsTranscriptionVisible(true);
+    } else {
+      Speech.speak("Please say a valid lesson number.");
     }
   };
 
-  const handleMicPress = () => {
-    if (recording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  };
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000080" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Student Lessons</Text>
+      <Text style={styles.title}>Maths Lesson{"\n"}Screen</Text>
 
-      {/* Display active lesson */}
-      {activeLesson ? (
-        <View style={styles.lessonContainer}>
-          <Text style={styles.lessonTitle}>{activeLesson.title}</Text>
-          <Text style={styles.lessonContent}>{activeLesson.content}</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Speech.speak("Now starting " + activeLesson.title)}
-          >
-            <Text style={styles.buttonText}>Start Lesson</Text>
-          </TouchableOpacity>
+      {activeNote ? (
+        <View style={styles.scrollContainer}>
+          <ScrollView contentContainerStyle={styles.lessonContainer}>
+            <Text style={styles.lessonTitle}>{activeNote.title}</Text>
+            <Text style={styles.lessonContent}>{activeNote.content}</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                Speech.speak(`Now starting ${activeNote.title}.`);
+                Speech.speak(`${activeNote.title}. ${activeNote.content}`);
+              }}
+            >
+              <Text style={styles.buttonText}>Play Lesson</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       ) : (
-        lessons.map((lesson) => (
+        notes.map((note, index) => (
           <TouchableOpacity
-            key={lesson.id}
+            key={note.id}
             style={styles.card}
             onPress={() => {
-              setActiveLesson(lesson);
-              Speech.speak(`You have selected ${lesson.title}.`);
+              setActiveNote(note);
+              Speech.speak(`You have selected ${note.title}.`);
             }}
           >
-            <Text style={styles.cardTitle}>{lesson.title}</Text>
+            <Text style={styles.cardTitle}>{`Lesson ${index + 1}: ${
+              note.title
+            }`}</Text>
           </TouchableOpacity>
         ))
       )}
 
-      {/* Mic Button for Voice Input */}
-      <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
+      <TouchableOpacity
+        style={styles.micButton}
+        onPress={isRecording ? stopRecording : startRecording}
+      >
         <Ionicons
-          name={recording ? "stop-circle" : "mic"}
-          size={24}
+          name={isRecording ? "stop-circle" : "mic"}
+          size={30}
           color="white"
         />
       </TouchableOpacity>
@@ -128,101 +141,91 @@ const StudentLessonScreen = () => {
       {isTranscribing && (
         <Text style={styles.transcribingText}>Transcribing...</Text>
       )}
-      {isTranscriptionVisible && transcribedSpeech && (
-        <View style={styles.transcriptionContainer}>
-          <Text style={styles.transcriptionText}>{transcribedSpeech}</Text>
-        </View>
-      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1, // Ensure container takes the full available height
+    alignItems: "center",
+
+    padding: 16,
+  },
+  scrollContainer: {
+    height: "65%", // Adjust ScrollView container to be 70% of the screen height
+    width: "100%",
+  },
+  loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    padding: 16,
   },
   title: {
-    fontSize: 24,
+    marginTop: 30,
+    fontSize: 30,
     fontWeight: "bold",
+    color: "#000080",
+    textAlign: "center",
     marginBottom: 20,
   },
   lessonContainer: {
-    marginBottom: 40,
     padding: 20,
     backgroundColor: "#fff",
     borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    width: "100%",
+    elevation: 3,
+    marginBottom: 30,
   },
   lessonTitle: {
-    fontSize: 18,
-    fontWeight: "500",
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: 10,
   },
   lessonContent: {
-    fontSize: 16,
-    marginVertical: 10,
-    lineHeight: 22,
+    fontSize: 18,
+    lineHeight: 24,
+    marginBottom: 20,
   },
   card: {
-    backgroundColor: "#4682B4",
+    backgroundColor: "#000080",
     borderRadius: 8,
     padding: 20,
     marginVertical: 10,
     width: "100%",
     alignItems: "center",
+    elevation: 2,
   },
   cardTitle: {
     color: "white",
     fontSize: 18,
+    fontWeight: "500",
   },
   micButton: {
-    marginTop: 30,
+    position: "absolute",
+    bottom: 40,
     backgroundColor: "#000080",
     padding: 20,
     borderRadius: 50,
+    elevation: 5,
   },
   transcribingText: {
     fontSize: 16,
-    color: "#FFA500",
+    color: "#FF4500",
     marginTop: 10,
   },
-  transcriptionContainer: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  transcriptionText: {
-    fontSize: 16,
-    color: "#000",
-  },
   button: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#4682B4",
-    borderRadius: 5,
+    backgroundColor: "#000080",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     color: "white",
     fontSize: 16,
+    fontWeight: "500",
   },
 });
 

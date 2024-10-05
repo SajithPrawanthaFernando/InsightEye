@@ -45,7 +45,7 @@ const MainScreen = ({
         } else if (transcribedSpeech.includes("science")) {
           navigation.navigate("StudentHome");
         } else if (transcribedSpeech.includes("maths")) {
-          navigation.navigate("NoteScreen");
+          navigation.navigate("StudentLessonScreen");
         } else if (transcribedSpeech.includes("log out")) {
           handleLogout();
           navigation.navigate("login");
@@ -115,7 +115,7 @@ const MainScreen = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("NoteScreen")}
+          onPress={() => navigation.navigate("StudentLessonScreen")}
         >
           <Ionicons name="calculator-outline" size={40} color="white" />
           <Text style={styles.cardText}>Maths</Text>
