@@ -10,7 +10,7 @@ import { Audio } from "expo-av";
 import { transcribeSpeech } from "../../functions/transcribeSpeech";
 import { recordSpeech } from "../../functions/recordSpeech";
 import useWebFocus from "../../hooks/useWebFocus";
-import * as Speech from "expo-speech"; // For text-to-speech
+import * as Speech from "expo-speech";
 
 const CLARIFAI_PAT = "6f0772ff6e2940a0b7ca5c9c6aa0ca1c";
 const CLARIFAI_USER_ID = "obosl24w909z";

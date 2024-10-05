@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import * as Speech from "expo-speech"; // For text-to-speech
+import * as Speech from "expo-speech";
 
 const HomeScreen = ({
   startRecording,
@@ -50,7 +50,7 @@ const HomeScreen = ({
 
       const timer = setTimeout(() => {
         setIsTranscriptionVisible(false);
-        setTranscribedSpeech(""); // Clear after handling
+        setTranscribedSpeech("");
       }, 1000);
 
       return () => clearTimeout(timer);

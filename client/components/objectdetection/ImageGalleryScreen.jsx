@@ -10,7 +10,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { db, auth } from "../../hooks/firebase";
 import { Ionicons } from "@expo/vector-icons";
-import * as Speech from "expo-speech"; // For text-to-speech
+import * as Speech from "expo-speech";
 
 const ImageGalleryScreen = ({
   startRecording,
@@ -45,7 +45,7 @@ const ImageGalleryScreen = ({
 
       // Add image descriptions
       images.forEach((image, index) => {
-        const imageDescription = image.objectName || `Image ${index + 1}`; // Assuming images have a 'description' field
+        const imageDescription = image.objectName || `Image ${index + 1}`;
         message += ` Image ${index + 1} is ${imageDescription}.`;
       });
 
@@ -93,7 +93,7 @@ const ImageGalleryScreen = ({
   const fetchImages = async () => {
     try {
       // Replace `currentUserId` with the actual user ID, possibly from Firebase Auth
-      const currentUserId = auth.currentUser.uid; // Assuming you're using Firebase Authentication
+      const currentUserId = auth.currentUser.uid;
 
       const snapshot = await db
         .collection("objects")

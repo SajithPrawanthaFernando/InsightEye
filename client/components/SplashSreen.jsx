@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff", // White background
+    backgroundColor: "#fff",
   },
   appName: {
     fontSize: 52,
     fontWeight: "bold",
-    color: "#000080", // Dark blue color for app name
+    color: "#000080",
     marginBottom: 50,
   },
   tagline: {

@@ -7,9 +7,9 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from "react-native";
-import * as Speech from "expo-speech"; // For text-to-speech
+import * as Speech from "expo-speech";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons"; // For the mic icon
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginPage = ({
   startRecording,

@@ -7,22 +7,22 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { db } from "../../../hooks/firebase"; // Update the path according to your project structure
+import { db } from "../../../hooks/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { BarChart } from "react-native-chart-kit";
 import moment from "moment";
-import * as Print from "expo-print"; // Import for PDF generation
-import * as Sharing from "expo-sharing"; // To share the PDF
-import { captureRef } from "react-native-view-shot"; // For capturing the chart as image
-import { ScrollView } from "react-native-gesture-handler"; // In case of longer content
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import { captureRef } from "react-native-view-shot";
+import { ScrollView } from "react-native-gesture-handler";
 
 const InteractionReportScreen = () => {
   const [dailyInteractions, setDailyInteractions] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [reportData, setReportData] = useState([]); // For storing data for PDF export
-  const [totalCount, setTotalCount] = useState(0); // Store the total interaction count
-  const chartRef = useRef(); // Ref for capturing chart image
-  const [chartImageURI, setChartImageURI] = useState(null); // URI of the captured chart image
+  const [reportData, setReportData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const chartRef = useRef();
+  const [chartImageURI, setChartImageURI] = useState(null);
 
   useEffect(() => {
     const fetchDailyInteractions = async () => {
@@ -62,8 +62,8 @@ const InteractionReportScreen = () => {
 
             // Add each object data to the report rows
             reportRows.push({
-              userId: doc.id, // Assuming `doc.id` is the user id
-              objectName: data.objectName || "Unknown", // Assuming `description` is object name
+              userId: doc.id,
+              objectName: data.objectName || "Unknown",
               date: moment(data.createdAt.toDate()).format("YYYY-MM-DD"),
             });
           }
@@ -195,7 +195,7 @@ const InteractionReportScreen = () => {
               },
             ],
           }}
-          width={330} // from react-native
+          width={330}
           height={400}
           yAxisLabel="" // No prefix for Y-axis
           yAxisSuffix="" // No suffix, just clean labels
@@ -219,7 +219,7 @@ const InteractionReportScreen = () => {
             barPercentage: 0.6, // Adjust bar width
             useShadowColorFromDataset: false,
           }}
-          bezier // Smoothens the curve (optional)
+          bezier
           style={{
             marginVertical: 10,
             borderRadius: 16,
@@ -255,18 +255,18 @@ const styles = StyleSheet.create({
     color: "#000080",
   },
   btn: {
-    backgroundColor: "#000080", // Navy blue color
-    paddingVertical: 15, // Vertical padding for height
-    paddingHorizontal: 40, // Horizontal padding for width
-    borderRadius: 10, // Rounded corners
-    marginVertical: 20, // Margin between button and other elements
+    backgroundColor: "#000080",
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginVertical: 20,
     marginTop: 30,
-    alignItems: "center", // Center text horizontally
+    alignItems: "center",
   },
   btnText: {
-    color: "#fff", // White text color
-    fontSize: 16, // Font size
-    fontWeight: "bold", // Bold text
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

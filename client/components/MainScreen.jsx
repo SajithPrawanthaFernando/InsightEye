@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import * as Speech from "expo-speech"; // For text-to-speech
+import * as Speech from "expo-speech";
 import { auth } from "../hooks/firebase";
 import { signOut } from "firebase/auth";
 
@@ -185,9 +185,9 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "#000080",
     borderRadius: 10,
-    alignItems: "center", // Align items in the center vertically
-    justifyContent: "space-between", // Align items starting from the left
-    paddingHorizontal: 20, // Add some horizontal padding for spacing
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
     marginTop: 40,
     margin: 10,
     shadowColor: "#000",
@@ -195,13 +195,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flexDirection: "row", // Set the direction to row
+    flexDirection: "row",
   },
   logoutText: {
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "bold",
-    marginLeft: 10, // Add space between icon and text
+    marginLeft: 10,
   },
   cardText: {
     color: "#ffffff",

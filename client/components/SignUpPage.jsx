@@ -9,8 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import * as Speech from "expo-speech"; // For text-to-speech
-import { Ionicons } from "@expo/vector-icons"; // For mic icon
+import * as Speech from "expo-speech";
+import { Ionicons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    height: 60, // Adjusted height for better fit
+    height: 60,
     color: "#000",
     paddingHorizontal: 15,
     borderRadius: 25,

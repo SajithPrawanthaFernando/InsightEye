@@ -9,7 +9,6 @@ import ImageActionsScreen from "../components/objectdetection/ImageActionsScreen
 import MainScreen from "../components/MainScreen";
 import SplashScreen from "../components/SplashSreen";
 import LoginPage from "../components/LoginPage";
-import Profile from "../components/Profile";
 import SignUpPage from "../components/SignUpPage";
 
 import MainHome from "../components/ScienceLearning/MainHome";
@@ -31,7 +30,7 @@ import NoteScreen from "../components/mscreens/noteScreen";
 import NoteInputScreen from "../components/mscreens/noteInputModel";
 import ViewNoteScreen from "../components/mscreens/ViewNoteScreen";
 import EditNoteScreen from "../components/mscreens/EditNoteScreen";
-import StudentLessonScreen from "../components/mscreens/StudentLessonScreen"; // Ensure the correct path
+import StudentLessonScreen from "../components/mscreens/StudentLessonScreen";
 
 import InstructorHomee from "../components/Instructor/InstructorHome";
 
@@ -246,15 +245,7 @@ const App = () => {
           />
         )}
       </Stack.Screen>
-      <Stack.Screen name="Profile" options={{ headerShown: false }}>
-        {(props) => (
-          <Profile
-            {...props}
-            user={user}
-            handleAuthentication={handleAuthentication}
-          />
-        )}
-      </Stack.Screen>
+
       <Stack.Screen name="HomeScreen" options={{ headerShown: false }}>
         {(props) => (
           <HomeScreen
