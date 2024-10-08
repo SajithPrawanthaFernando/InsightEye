@@ -346,7 +346,7 @@ export default function ObjectDetectionScreen() {
       <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
         <Ionicons
           name={isRecording ? "stop-circle" : "mic"}
-          size={24}
+          size={30}
           color="white"
         />
       </TouchableOpacity>
@@ -432,9 +432,9 @@ const styles = StyleSheet.create({
   micButton: {
     position: "absolute",
     bottom: 10,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 100,
     backgroundColor: "#000080",
     justifyContent: "center",
     alignItems: "center",

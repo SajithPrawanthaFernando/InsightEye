@@ -213,7 +213,7 @@ const EditImageScreen = ({
         <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
           <Ionicons
             name={isRecording ? "stop-circle" : "mic"}
-            size={24}
+            size={30}
             color="white"
           />
         </TouchableOpacity>
@@ -288,10 +288,10 @@ const styles = StyleSheet.create({
   micButton: {
     marginTop: 40,
     bottom: 20,
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     marginBottom: 10,
-    borderRadius: 30,
+    borderRadius: 100,
     backgroundColor: "#000080",
     justifyContent: "center",
     alignItems: "center",
