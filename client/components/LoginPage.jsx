@@ -154,7 +154,7 @@ const LoginPage = ({
       <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
         <Ionicons
           name={isRecording ? "stop-circle" : "mic"}
-          size={50}
+          size={30}
           color={"white"}
         />
       </TouchableOpacity>
@@ -217,6 +217,8 @@ const styles = StyleSheet.create({
   },
   micButton: {
     backgroundColor: "#000080",
+    width: 80,
+    height: 80,
     padding: 15,
     borderRadius: 50,
     alignItems: "center",

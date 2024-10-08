@@ -32,6 +32,13 @@ import ViewNoteScreen from "../components/mscreens/ViewNoteScreen";
 import EditNoteScreen from "../components/mscreens/EditNoteScreen";
 import StudentLessonScreen from "../components/mscreens/StudentLessonScreen";
 
+import ScheduleHome from "../components/Scheduling/scheduleHome"; // Import the ScheduleHome component
+import TasksManagement from "../components/Scheduling/tasksManagement"; // Import the TasksManagement component
+import AddTasks from "../components/Scheduling/addTasks"; // Import the AddTasks component
+import EmotionTracker from "../components/Scheduling/emotionTracker"; // Import the EmotionTracker component
+import HealthTracker from "../components/Scheduling/healthTracker"; // Import the HealthTracker component
+import EditTask from "../components/Scheduling/editTask"; // Import the EditTask component
+
 import InstructorHomee from "../components/Instructor/InstructorHome";
 
 import ObjectReport from "../components/Instructor/ObjectReport/ObjectReport";
@@ -636,6 +643,97 @@ const App = () => {
       <Stack.Screen name="ObjectReport" options={{ headerShown: false }}>
         {(props) => (
           <ObjectReport
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen name="ScheduleHome" options={{ headerShown: false }}>
+        {(props) => (
+          <ScheduleHome
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="TasksManagement" options={{ headerShown: false }}>
+        {(props) => (
+          <TasksManagement
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddTasks" options={{ headerShown: false }}>
+        {(props) => (
+          <AddTasks
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="EmotionTracker" options={{ headerShown: false }}>
+        {(props) => (
+          <EmotionTracker
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="HealthTracker" options={{ headerShown: false }}>
+        {(props) => (
+          <HealthTracker
+            {...props}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            transcribedSpeech={transcribedSpeech}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            setTranscribedSpeech={setTranscribedSpeech}
+            setIsRecording={setIsRecording}
+            setIsTranscribing={setIsTranscribing}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="EditTask" options={{ headerShown: false }}>
+        {(props) => (
+          <EditTask
             {...props}
             startRecording={startRecording}
             stopRecording={stopRecording}

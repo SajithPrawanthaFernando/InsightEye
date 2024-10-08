@@ -6,13 +6,13 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
-  Button,
 } from "react-native";
 import { db } from "../../hooks/firebase";
 import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Print from "expo-print";
 import * as Speech from "expo-speech"; // For text-to-speech functionality
+import * as Sharing from "expo-sharing"; // Import expo-sharing
 
 const NoteScreen = ({
   navigation,
@@ -112,7 +112,7 @@ const NoteScreen = ({
           .map(
             (note) => `
           <li><strong>${note.title}</strong>: ${
-              note.description || "No description"
+              note.content || "No description"
             }</li>
         `
           )
@@ -123,6 +123,16 @@ const NoteScreen = ({
     try {
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
       Alert.alert("PDF Generated", `File saved to ${uri}`);
+
+      // Check if the device can share the file and share it
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(uri);
+      } else {
+        Alert.alert(
+          "Sharing not available",
+          "This device doesn't support sharing."
+        );
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
       Alert.alert("Error", "Could not generate PDF.");

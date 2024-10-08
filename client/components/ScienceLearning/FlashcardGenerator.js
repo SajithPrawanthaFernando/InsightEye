@@ -1,4 +1,3 @@
-// app/FlashcardGenerator.js
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,6 +7,8 @@ import {
   Alert,
   Text,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { fetchSummary } from "../../hooks/apiConfig";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
@@ -75,54 +76,62 @@ const FlashcardGenerator = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Generate Flashcard</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        style={styles.container}
+      >
+        <Text style={styles.title}>Generate Flashcard</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Note Title"
-        value={note.title}
-        editable={false}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Note Title"
+          value={note.title}
+          editable={false}
+        />
 
-      <TextInput
-        style={styles.textArea}
-        placeholder="Note Description"
-        value={note.description}
-        editable={false}
-        multiline
-      />
+        <TextInput
+          style={styles.textArea}
+          placeholder="Note Description"
+          value={note.description}
+          editable={false}
+          multiline
+        />
 
-      {loading && <Text style={styles.loadingText}>Loading...</Text>}
-
-      {summary && (
-        <View style={styles.flashcard}>
-          <Text style={styles.flashcardTitle}>Flashcard Summary:</Text>
-          <Text style={styles.summaryText}>{summary}</Text>
-        </View>
-      )}
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.generateButton]}
-          onPress={handleGenerateSummary}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? "Generating..." : "Generate Summary"}
-          </Text>
-        </TouchableOpacity>
+        {loading && <Text style={styles.loadingText}>Loading...</Text>}
 
         {summary && (
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={handleSaveFlashcard}
-          >
-            <Text style={styles.buttonText}>Save Flashcard</Text>
-          </TouchableOpacity>
+          <View style={styles.flashcard}>
+            <Text style={styles.flashcardTitle}>Flashcard Summary:</Text>
+            <Text style={styles.summaryText}>{summary}</Text>
+          </View>
         )}
-      </View>
-    </ScrollView>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.generateButton]}
+            onPress={handleGenerateSummary}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? "Generating..." : "Generate Summary"}
+            </Text>
+          </TouchableOpacity>
+
+          {summary && (
+            <TouchableOpacity
+              style={[styles.button, styles.saveButton]}
+              onPress={handleSaveFlashcard}
+            >
+              <Text style={styles.buttonText}>Save Flashcard</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -186,6 +195,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 40,
   },
   button: {
     paddingVertical: 12,
@@ -204,7 +214,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: "#4CAF50",
-    marginTop: 10,
   },
 });
 
