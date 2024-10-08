@@ -96,7 +96,9 @@ const CardsDetail = ({
         } else if (command.includes("stop")) {
           handleStopReading();
         } else {
-          Speech.speak("Sorry, I didn't understand the command. Please try again.");
+          Speech.speak(
+            "Sorry, I didn't understand the command. Please try again."
+          );
         }
 
         // Clear the transcribed speech after handling
@@ -185,7 +187,7 @@ const CardsDetail = ({
         <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
           <Ionicons
             name={isRecording ? "stop-circle" : "mic"}
-            size={24}
+            size={30}
             color="white"
           />
         </TouchableOpacity>
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 15,
     alignItems: "center",
-    width: '80%', // Added width for button consistency
+    width: "80%", // Added width for button consistency
   },
   stopButton: {
     backgroundColor: "#FF0000", // Red color for the stop button
@@ -256,9 +258,9 @@ const styles = StyleSheet.create({
   },
   micButton: {
     marginTop: 20, // Add margin for spacing
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 100,
     backgroundColor: "#000080",
     justifyContent: "center",
     alignItems: "center",

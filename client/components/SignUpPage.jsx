@@ -172,7 +172,7 @@ const SignUpPage = ({
         <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
           <Ionicons
             name={isRecording ? "stop-circle" : "mic"}
-            size={50}
+            size={30}
             color={"white"}
           />
         </TouchableOpacity>
@@ -238,6 +238,8 @@ const styles = StyleSheet.create({
   micButton: {
     backgroundColor: "#000080",
     padding: 15,
+    width: 80,
+    height: 80,
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",

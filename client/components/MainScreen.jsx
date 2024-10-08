@@ -38,13 +38,13 @@ const MainScreen = ({
       setIsTranscriptionVisible(true);
       const handleNavigation = () => {
         if (transcribedSpeech.includes("schedule")) {
-          navigation.navigate("ScheduleScreen");
+          navigation.navigate("ScheduleHome");
         } else if (transcribedSpeech.includes("object detection")) {
           setTranscribedSpeech("");
           navigation.navigate("HomeScreen");
         } else if (transcribedSpeech.includes("science")) {
           navigation.navigate("StudentHome");
-        } else if (transcribedSpeech.includes("maths")) {
+        } else if (transcribedSpeech.includes("maths learning")) {
           navigation.navigate("StudentLessonScreen");
         } else if (transcribedSpeech.includes("log out")) {
           handleLogout();
@@ -94,7 +94,7 @@ const MainScreen = ({
       <View style={styles.gridContainer}>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("ScheduleScreen")}
+          onPress={() => navigation.navigate("ScheduleHome")}
         >
           <Ionicons name="time-outline" size={40} color="white" />
           <Text style={styles.cardText}>Schedule</Text>
@@ -130,7 +130,7 @@ const MainScreen = ({
       <TouchableOpacity style={styles.micButton} onPress={handleMicPress}>
         <Ionicons
           name={isRecording ? "stop-circle" : "mic"}
-          size={24}
+          size={30}
           color="white"
         />
       </TouchableOpacity>
@@ -212,10 +212,10 @@ const styles = StyleSheet.create({
   micButton: {
     position: "absolute",
     bottom: 20,
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     marginBottom: 20,
-    borderRadius: 30,
+    borderRadius: 100,
     backgroundColor: "#000080",
     justifyContent: "center",
     alignItems: "center",

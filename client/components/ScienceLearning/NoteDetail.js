@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     marginVertical: 10,
   },
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
+    marginBottom: 10,
     borderRadius: 10,
     alignItems: "center",
     marginHorizontal: 5, // Reduced the margin between buttons
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     backgroundColor: "#000080",
+    textAlign: "center",
   },
   deleteButton: {
     backgroundColor: "red",

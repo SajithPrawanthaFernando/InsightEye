@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   textArea: {
-    height: 150, // Set a height for the text area
+    height: 520, // Set a height for the text area
     textAlignVertical: "top", // Aligns text at the top in multiline input
   },
   button: {

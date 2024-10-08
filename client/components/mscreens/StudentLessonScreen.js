@@ -99,15 +99,6 @@ const StudentLessonScreen = (props) => {
           <ScrollView contentContainerStyle={styles.lessonContainer}>
             <Text style={styles.lessonTitle}>{activeNote.title}</Text>
             <Text style={styles.lessonContent}>{activeNote.content}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                Speech.speak(`Now starting ${activeNote.title}.`);
-                Speech.speak(`${activeNote.title}. ${activeNote.content}`);
-              }}
-            >
-              <Text style={styles.buttonText}>Play Lesson</Text>
-            </TouchableOpacity>
           </ScrollView>
         </View>
       ) : (
@@ -153,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   scrollContainer: {
-    height: "65%", // Adjust ScrollView container to be 70% of the screen height
+    height: "78%", // Adjust ScrollView container to be 70% of the screen height
     width: "100%",
   },
   loadingContainer: {
@@ -202,11 +193,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   micButton: {
-    position: "absolute",
-    bottom: 40,
     backgroundColor: "#000080",
-    padding: 20,
+    width: 80,
+    height: 80,
+    padding: 15,
+    marginTop: 250,
     borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
     elevation: 5,
   },
   transcribingText: {
